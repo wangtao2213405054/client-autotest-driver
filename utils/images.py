@@ -47,7 +47,7 @@ def measure(infile, multiple) -> str:
     width *= multiple
     height *= multiple
 
-    image = image.resize([int(width), int(height)], Image.ANTIALIAS)
+    image = image.resize((int(width), int(height)), Image.ANTIALIAS)
     image.save(infile)
 
     return infile
@@ -65,6 +65,6 @@ def cut(infile, area: tuple, aspect: tuple) -> str:
     image = image.crop(area)
     print(image)
     result = Image.new('RGB', aspect)
-    result.paste(image, area, 0)
+    result.paste(image, area)
     result.save(infile)
     return infile
