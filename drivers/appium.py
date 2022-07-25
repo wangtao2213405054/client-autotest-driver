@@ -116,7 +116,7 @@ class Appium:
 
         logging.info(f'在手机屏幕上 {direction.get("desc")}')
 
-        return self.driver.swipe(*direction.get('value'), duration)
+        return self.driver.swipe(*direction.get('value'), int(duration))
 
     def find_element_swipe(self, by, value, index=0, name=None, handle='vertical', start=0.8, end=0.2, wait=0.5):
         """
@@ -141,4 +141,4 @@ class Appium:
         axis = swipe.get(handle)
 
         action = TouchAction(self.driver)
-        return action.press(*axis[0: 2]).wait(wait).move_to(*axis[2: 4]).release().perform()
+        return action.press(*axis[0: 2]).wait(int(wait)).move_to(*axis[2: 4]).release().perform()
