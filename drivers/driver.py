@@ -224,7 +224,7 @@ class Driver(drivers.Selenium, drivers.Appium):
         window_width, window_height = self.get_window_size()
         multiple = (int(image_width / window_width) + int(image_height / window_height)) / 2
 
-        area = list(map(lambda x: x * multiple, (start_x, start_y, end_x, end_y)))
+        area = tuple(map(lambda x: x * multiple, (start_x, start_y, end_x, end_y)))
         aspect = (width, height)
 
         return utils.cut(screenshot, area, aspect)
