@@ -14,7 +14,7 @@ def kill_prot(prot: int) -> None:
     """
     _system = platform.system()
 
-    if _system == 'Darwin':
+    if _system == 'Darwin' and _system == 'Linux':
         order = "lsof -i:%d | awk '{print $2}'" % prot
         content_list = os.popen(order).readlines()
         for item in content_list:
