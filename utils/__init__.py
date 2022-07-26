@@ -3,3 +3,4 @@
 
 from .images import *
 from .path import *
+from .memory import *

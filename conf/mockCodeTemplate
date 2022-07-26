@@ -1,0 +1,38 @@
+# _author: Coke
+# _date: 2022/7/26 11:33
+
+import json
+import os
+
+
+class ResponseFile:
+
+    @staticmethod
+    def charles_file(file_name):
+        """
+        返回对应文件的信息
+        :param file_name: 文件名称
+        :return:
+        """
+        file_name = f'{file_name}.json'
+        obj_path = os.path.dirname(__file__)
+        json_path = os.path.join(obj_path, '$device', file_name)
+        with open(json_path, 'r') as file:
+            res_file = json.loads(file.read())
+        return res_file
+
+
+class $class_name(ResponseFile):
+    url = '$url'
+
+    def response(self, flow):
+        # 拦截指定的url
+        if self.url in flow.request.url:
+            res = self.charles_file('$class_name')
+            # 设置返回数据
+            flow.response.set_text(json.dumps(res))
+
+
+addons = [
+$add
+]
