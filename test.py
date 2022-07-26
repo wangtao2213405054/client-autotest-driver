@@ -1,8 +1,4 @@
 
-import utils
 
-
-utils.device = 'iPhone'
-utils.projectName = 'Wechat'
-
-print(utils.storage('message'))
+data = 'test formal {print} info:%d' % 2
+print(data)
