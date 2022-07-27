@@ -5,3 +5,4 @@
 
 projectName = 'client'
 device = 'iPhone'
+platform = 'ios'

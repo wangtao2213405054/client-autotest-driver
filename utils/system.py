@@ -15,7 +15,7 @@ def kill_prot(prot: int) -> None:
     """
     _system = platform.system()
 
-    if _system == 'Darwin' and _system == 'Linux':
+    if _system == 'Darwin' or _system == 'Linux':
         order = "lsof -i:%d | awk '{print $2}'" % prot
         content_list = os.popen(order).readlines()
         for item in content_list:
@@ -59,4 +59,4 @@ def usage_prot(ip: str, prot: int) -> bool:
 
 
 if __name__ == '__main__':
-    print(usage_prot('127.0.0.1', 8081))
+    print(kill_prot(8888))
