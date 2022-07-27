@@ -1,6 +1,13 @@
-
 import re
 
-data = 'www.example.com'
+data_list = [
+    'www.baidu.com',
+    'www.mitmproxy.org',
+    'www.info.com',
+    'www.github.cn',
+]
 
-print(re.findall(r'^(?!([^\.:]+\.)*example\.com:)', data))
+
+data = map(lambda x: re.sub(r'\.', r'\.', x), data_list)
+data = list(map(lambda x: f'(?!{x}:)', data))
+print(data)
