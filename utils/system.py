@@ -2,9 +2,10 @@
 # _date: 2022/7/26 22:41
 
 import platform
-import os
 import warnings
 import socket
+import os
+import re
 
 
 def kill_prot(prot: int) -> None:
@@ -21,8 +22,26 @@ def kill_prot(prot: int) -> None:
             item = item.strip()
             if item.isdigit():
                 os.popen(f'kill -9 {item}')
+
     elif _system == 'Windows':
-        ...
+        pids = []
+        course_info = os.popen(f'netstat -aon | findstr "{prot}"').readlines()
+
+        for item in course_info:
+            item = item.strip()
+            pid_list = re.findall(r'\d+$', item)
+
+            if pid_list and pid_list[0] not in pids:
+                pids.append(pid_list[0])
+
+        for pid in pids:
+            find_name = os.popen(f'tasklist | findstr "{pid}"').readlines()
+            for course in find_name:
+                name_list = re.findall(r'\D+', course)
+                if name_list:
+                    _name = name_list[0].strip()
+                    os.popen(f'taskkill /f /im {_name}')
+
     else:
         warnings.warn('暂不支持的系统类型')
 
@@ -40,4 +59,4 @@ def usage_prot(ip: str, prot: int) -> bool:
 
 
 if __name__ == '__main__':
-    print(usage_prot('0.0.0.0', 4723))
+    print(usage_prot('127.0.0.1', 8081))
