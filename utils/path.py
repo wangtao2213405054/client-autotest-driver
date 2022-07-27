@@ -17,14 +17,8 @@ def storage(*args: str, name='storage') -> str:
     """
 
     storage_path = same_path
-    base_folder = [name, utils.projectName, utils.device]
+    base_folder = (name, utils.projectName, utils.device) + args
     for item in base_folder:
-        storage_path = os.path.join(storage_path, item)
-        print(storage_path)
-        if not os.path.exists(storage_path):
-            os.mkdir(storage_path)
-
-    for item in args:
         storage_path = os.path.join(storage_path, item)
         if not os.path.exists(storage_path):
             os.mkdir(storage_path)
