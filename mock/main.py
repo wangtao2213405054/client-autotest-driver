@@ -11,17 +11,21 @@ import time
 
 
 class MockHandler:
-    """ 初始化 Mock 相关信息及配置 """
+    """
+    mock 服务主入口
+    依赖于 mitmproxy
+    """
 
-    def __init__(self):
-        self._domain = [
-            'www.baidu.com',
-            'mitmproxy.org'
-        ]
-        self._port = 8888
-        self._code_file = r'D:\PycharmProject\client-autotest-driver\test1.py'
+    def __init__(self, prot):
+        """
+        初始化 Mock 相关信息及配置
+        :param prot: 要启动的端口号
+        """
+        self._port = prot
+        self._domain = self.get_domain
+        self._api = self.get_api
+        self._code_file = mock.CreateMockCode(self._api).create_file()
         self.start_server()
-        time.sleep(3)
 
     def start_server(self):
         """
@@ -40,6 +44,32 @@ class MockHandler:
         )
         thread.start()
 
+    @property
+    def get_domain(self):
+        """
+        获取当前项目下的域名列表
+        mock data
+        """
+        _domain = [
+            'www.baidu.com',
+            'mitmproxy.org',
+            'python.org',
+            'github.org'
+        ]
+        return _domain
+
+    @property
+    def get_api(self):
+        """
+        获取当前项目下的所有接口
+        mock data
+        """
+        _api = [
+            '/api/v1/platform/user/login',
+            '/api/v1/platform/project/list'
+        ]
+        return _api
+
 
 if __name__ == '__main__':
-    MockHandler()
+    MockHandler(8888)
