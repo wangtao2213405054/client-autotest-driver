@@ -35,4 +35,4 @@ if __name__ == '__main__':
         'www.baidu.com',
         'mitmproxy.org'
     ]
-    start_mitmproxy_server('test', 8888, data_list)
+    start_mitmproxy_server(r'D:\PycharmProject\client-autotest-driver\test1.py', 8888, data_list)

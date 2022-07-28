@@ -63,8 +63,10 @@ def cut(infile, area: tuple[int, int, int, int], aspect: tuple[int, int]) -> str
     """
     image = Image.open(infile)
     image = image.crop(area)
-    print(image)
+
     result = Image.new('RGB', aspect)
+
     result.paste(image, area)
     result.save(infile)
+
     return infile

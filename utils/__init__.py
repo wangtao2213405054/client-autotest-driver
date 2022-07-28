@@ -5,3 +5,4 @@ from .images import *
 from .path import *
 from .memory import *
 from .system import *
+from .logger import *
