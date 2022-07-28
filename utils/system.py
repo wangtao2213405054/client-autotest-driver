@@ -24,23 +24,14 @@ def kill_prot(prot: int) -> None:
                 os.popen(f'kill -9 {item}')
 
     elif _system == 'Windows':
-        pids = []
+        # 修复 windows 下运行 kill 方法会关闭主进程的 bug
         course_info = os.popen(f'netstat -aon | findstr "{prot}"').readlines()
-
         for item in course_info:
             item = item.strip()
             pid_list = re.findall(r'\d+$', item)
-
-            if pid_list and pid_list[0] not in pids:
-                pids.append(pid_list[0])
-
-        for pid in pids:
-            find_name = os.popen(f'tasklist | findstr "{pid}"').readlines()
-            for course in find_name:
-                name_list = re.findall(r'\D+', course)
-                if name_list:
-                    _name = name_list[0].strip()
-                    os.popen(f'taskkill /f /im {_name}')
+            if pid_list:
+                os.popen(f'taskkill -t -f /pid {pid_list[0]}')
+                break
 
     else:
         warnings.warn('暂不支持的系统类型')
