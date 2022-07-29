@@ -2,22 +2,27 @@
 # _date: 2022/7/20 11:37
 
 
-def selenium_starter(url):
-    """ selenium 启动器 """
+class DriverStarter:
+    """ 启动器 """
 
-    from selenium import webdriver
+    def __init__(self, **kwargs):
+        ...
 
-    driver = webdriver.Chrome()
-    driver.get(url)
+    def selenium_starter(self, url):
+        """ selenium 启动器 """
 
-    return driver
+        from selenium import webdriver
 
+        driver = webdriver.Chrome()
+        driver.get(url)
 
-def appium_starter():
-    """ appium 启动器 """
+        return driver
 
-    from appium import webdriver
+    def appium_starter(self):
+        """ appium 启动器 """
 
-    driver = webdriver.Remote()
+        from appium import webdriver
 
-    return driver
+        driver = webdriver.Remote()
+
+        return driver

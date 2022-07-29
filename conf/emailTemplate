@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>测试报告</title>
+</head>
+<style>
+  div {
+    line-height: 35px; /* 间距 */
+  }
+
+  .item {
+    font-size: 20px; /* 字体大小 */
+    font-weight: 600; /* 字体粗细400 -700 */
+  }
+</style>
+
+<body>
+  <img src="image_url" width="400" />
+  <div><strong>通过率: </strong><span>pass_rate</span></div>
+  <div><strong>运行时长: </strong><span>time</span></div>
+  <div><a href="report_url">查看详细报告 &gt;&gt;</a></div>
+</body>
+
+</html>

@@ -7,7 +7,6 @@ import threading
 import logging
 import utils
 import mock
-import time
 
 
 class MockHandler:

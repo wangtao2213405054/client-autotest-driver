@@ -1,8 +1,7 @@
+import importlib
 
 
-def test(*args):
-    data = (1, 2, 3) + args
-    print(data)
-
-
-test(4, 5, 6)
+if __name__ == '__main__':
+    _module = importlib.import_module('utils.path')
+    _function = getattr(_module, 'storage')
+    _function('message')
