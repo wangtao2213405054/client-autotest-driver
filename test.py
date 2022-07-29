@@ -1,7 +1,22 @@
 import importlib
+import inspect
+from drivers.appium import Appium
 
 
 if __name__ == '__main__':
-    _module = importlib.import_module('utils.path')
-    _function = getattr(_module, 'storage')
+    _module = importlib.import_module('drivers.appium')
+    mo = inspect.getmembers(_module)
+    for item in mo:
+        name, obj = item
+        if inspect.isclass(obj):
+            print(name)
+
+        if inspect.ismethod(obj):
+            print(name)
+
+    _class = getattr(_module, 'Appium')
+    print(_class, Appium)
+    _function = getattr(_class, 'find_elements')
+
+    print(_function)
     _function('message')

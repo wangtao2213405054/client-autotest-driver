@@ -7,12 +7,9 @@
 from .appium import Appium
 from .selenium import Selenium
 from .driver import Driver
-from .starter import appium_starter, selenium_starter
 
 __all__ = [
     'Appium',
     'Selenium',
-    'Driver',
-    'appium_starter',
-    'selenium_starter'
+    'Driver'
 ]
