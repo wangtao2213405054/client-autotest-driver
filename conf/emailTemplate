@@ -18,9 +18,14 @@
 
 <body>
   <img src="image_url" width="400" />
+  <div class="item">运行项目: <span>【tenant】</span></div>
+  <div><strong>迭代信息: </strong><span>【iteration】 </span></div>
   <div><strong>通过率: </strong><span>pass_rate</span></div>
+  <div><strong>运行设备: </strong><span>device</span></div>
+  <div><strong>构建人: </strong><span>build_name</span></div>
   <div><strong>运行时长: </strong><span>time</span></div>
   <div><a href="report_url">查看详细报告 &gt;&gt;</a></div>
+  <div><a href="ui_url">查看UI走查报告 &gt;&gt;</a></div>
 </body>
 
 </html>

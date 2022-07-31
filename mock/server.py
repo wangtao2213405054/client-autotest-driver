@@ -27,7 +27,7 @@ def start_mitmproxy_server(code_file, prot, domain_list):
         _filter = rf" --ignore-hosts '^(?![0-9\.]+:){_domain}'"
         _order += _filter
 
-    os.system(_order)
+    os.popen(_order)
 
 
 if __name__ == '__main__':

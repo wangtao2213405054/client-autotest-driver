@@ -6,3 +6,9 @@ from .path import *
 from .memory import *
 from .system import *
 from .logger import *
+from .message import Email, DintTalk
+
+__all__ = [
+    'Email',
+    'DintTalk'
+]

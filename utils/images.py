@@ -53,11 +53,11 @@ def measure(infile, multiple) -> str:
     return infile
 
 
-def cut(infile, area: tuple[int, int, int, int], aspect: tuple[int, int]) -> str:
+def cut(infile, area: tuple, aspect: tuple[int, int]) -> str:
     """
     对图片指定区域进行裁切并覆盖图片
     :param infile: 图片路径
-    :param area: 裁切区域
+    :param area: 裁切区域 (int, int, int, int)
     :param aspect: 宽高元组
     :return:
     """

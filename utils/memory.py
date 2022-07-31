@@ -7,3 +7,5 @@ projectName = 'client'  # 本次任务所运行的项目
 device = 'iPhone'  # 本次任务的设备标识
 platform = 'ios'  # 本次任务的设备平台
 ports = []  # 本次任务所启动的端口号
+cookies = None  # 当前浏览器的 cookies
+loginStatus = False  # 登录状态

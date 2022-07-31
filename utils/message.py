@@ -82,13 +82,9 @@ class DintTalk:
         :param own: 是否 @ 所有人
         """
         self.url = f'https://oapi.dingtalk.com/robot/send?access_token={token}'
-        self.body = dict(
-            at=dict(
-                atMobiles=mobile,
-                atUserIds=user,
-                isAtAll=own
-            )
-        )
+        self.body = {
+                'at': dict(atMobiles=mobile, atUserIds=user, isAtAll=own)
+            }
 
     def text(self, text: str):
         """

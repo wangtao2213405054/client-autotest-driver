@@ -19,4 +19,4 @@ if __name__ == '__main__':
     _function = getattr(_class, 'find_elements')
 
     print(_function)
-    _function('message')
+    _function('2', 'v')
