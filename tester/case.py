@@ -75,7 +75,7 @@ class TestCase:
             try:
                 _attr = getattr(self.event, item['function'])
             except AttributeError:
-                logging.warning(f'{item["name"]} 没有找到对于的函数映射, 请检查步骤事件配置是否正确')
+                logging.warning(f'没有找到 {item["name"]} 事件对应的函数映射, 请检查步骤事件配置是否正确')
                 _attr = getattr(self.event, 'attribute')
 
             item['attr'] = _attr
