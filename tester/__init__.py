@@ -6,11 +6,13 @@ from .result import TestResult
 from .case import TestCase
 from .runner import TestRunner
 from .suite import TestSuite
+from .event import CaseEvent
 
 __all__ = [
     'TestLoader',
     'TestResult',
     'TestCase',
     'TestRunner',
-    'TestSuite'
+    'TestSuite',
+    'CaseEvent'
 ]

@@ -2,6 +2,7 @@
 # _date: 2022/7/20 17:07
 
 from PIL import Image
+import imageio.v2 as imageio
 
 import os
 
@@ -70,3 +71,16 @@ def cut(infile, area: tuple, aspect: tuple[int, int]) -> str:
     result.save(infile)
 
     return infile
+
+
+def gif(paths: list[str], save_path: str, duration: int = 1.5):
+    """
+    将图片转换为 gif 动图
+    :param paths: 要转换图片的列表
+    :param save_path: gif 图片的保存路径
+    :param duration: 图片切换的间隔
+    :return:
+    """
+
+    frames = list(map(lambda x: imageio.imread(x), paths))
+    imageio.mimsave(save_path, frames, 'GIF', duration=duration)
