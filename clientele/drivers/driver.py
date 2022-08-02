@@ -5,9 +5,8 @@ from selenium.webdriver import Remote
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.common.exceptions import NoSuchElementException
 
-import drivers
 import logging
-import utils
+from clientele import utils, drivers
 import time
 import os
 
@@ -137,7 +136,7 @@ class Driver(drivers.Selenium, drivers.Appium):
 
         return width, height
 
-    def get_window_size(self) -> tuple:
+    def get_window_size(self) -> tuple[int, int]:
         """
         获取窗口宽高
         :return:

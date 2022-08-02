@@ -5,8 +5,7 @@
 
 import threading
 import logging
-import utils
-import mock
+from clientele import utils, mock
 
 
 class MockHandler:

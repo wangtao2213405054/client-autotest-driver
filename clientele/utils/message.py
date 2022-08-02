@@ -6,7 +6,7 @@ from email.mime.text import MIMEText
 
 import requests
 import smtplib
-import utils
+from clientele import utils
 import os
 import re
 
@@ -86,7 +86,7 @@ class DintTalk:
                 'at': dict(atMobiles=mobile, atUserIds=user, isAtAll=own)
             }
 
-    def text(self, text: str):
+    def text(self, text: str) -> requests.request:
         """
         钉钉机器人 text 消息类型
         :param text: 要发送的文本信息
@@ -96,7 +96,7 @@ class DintTalk:
         self.body['msgtype'] = 'text'
         return requests.request('POST', self.url, self.body)
 
-    def link(self, title, text, url, image):
+    def link(self, title, text, url, image) -> requests.request:
         """
         钉钉机器人 link 消息类型
         :param title: 标题
@@ -114,7 +114,7 @@ class DintTalk:
         self.body['msgtype'] = 'link'
         return requests.request('POST', self.url, self.body)
 
-    def markdown(self, title, text):
+    def markdown(self, title, text) -> requests.request:
         """
         钉钉机器人 markdown 消息类型
         :param title: 标题
@@ -128,7 +128,7 @@ class DintTalk:
         self.body['msgtype'] = 'markdown'
         return requests.request('POST', self.url, self.body)
 
-    def action(self, title, text):
+    def action(self, title, text) -> requests.request:
         """
         钉钉机器人 actionCard 消息类型
         :param title: 标题
@@ -142,7 +142,7 @@ class DintTalk:
         self.body['msgtype'] = 'actionCard'
         return requests.request('POST', self.url, self.body)
 
-    def feed(self, links):
+    def feed(self, links) -> requests.request:
         """
         钉钉机器人 feedCard 消息类型
         :param links: 字典中需要包含 title, messageURL, picURL 字段

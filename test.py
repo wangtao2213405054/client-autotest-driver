@@ -1,6 +1,6 @@
 import importlib
 import inspect
-from drivers.appium import Appium
+from clientele.drivers import Appium
 
 
 if __name__ == '__main__':

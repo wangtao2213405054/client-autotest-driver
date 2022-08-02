@@ -1,3 +1,0 @@
-appium-python-client
-requests
-pillow

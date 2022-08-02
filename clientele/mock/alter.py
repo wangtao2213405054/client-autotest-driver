@@ -3,9 +3,8 @@
 
 # 对 mock 的数据进行更新
 
-import utils
+from clientele import utils, mock
 import json
-import mock
 import os
 
 

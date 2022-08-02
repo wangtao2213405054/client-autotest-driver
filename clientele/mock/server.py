@@ -21,7 +21,7 @@ def start_mitmproxy_server(code_file, prot, domain_list):
 
     if platform.system() == 'Darwin' or platform.system() == 'Linux':
 
-        _re = map(lambda x: re.sub(r'\.', r'\.', x), domain_list)
+        _re = map(lambda x: re.sub(r'', r'\.', x), domain_list)
         _re = map(lambda x: f'(?!{x}:)', _re)
         _domain = ''.join(_re)
         _filter = rf" --ignore-hosts '^(?![0-9\.]+:){_domain}'"
@@ -35,4 +35,4 @@ if __name__ == '__main__':
         'www.baidu.com',
         'mitmproxy.org'
     ]
-    start_mitmproxy_server(r'D:\PycharmProject\client-autotest-driver\test1.py', 8888, data_list)
+    start_mitmproxy_server(r'/test1.py', 8888, data_list)

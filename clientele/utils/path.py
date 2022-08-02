@@ -1,10 +1,10 @@
 # _author: Coke
 # _date: 2022/7/20 17:41
 
-import utils
+from clientele import utils
 import os
 
-same_path = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+same_path = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 
 def storage(*args: str, name='storage') -> str:
@@ -26,13 +26,13 @@ def storage(*args: str, name='storage') -> str:
     return storage_path
 
 
-def get_conf_path():
+def get_conf_path() -> str:
     """
     获取配置文件路径
     :return:
     """
-    return os.path.join(same_path, 'conf')
+    return os.path.join(os.path.abspath('..'), 'conf')
 
 
 if __name__ == '__main__':
-    print(storage('message'))
+    print(get_conf_path())

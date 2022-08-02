@@ -4,7 +4,6 @@
 from io import StringIO
 
 import logging
-import tester
 import time
 import sys
 
@@ -12,7 +11,7 @@ import sys
 class TestCase:
     """ 用例组装器 """
 
-    def __init__(self, event: tester.CaseEvent):
+    def __init__(self, event):
         """
         初始化函数, 需要一个用例事件的绑定对象
         :param event: 用例事件对象
@@ -43,7 +42,7 @@ class TestCase:
         self.duration = None  # 本次用例耗时
 
     @property
-    def fabric(self):
+    def result(self) -> dict:
         """
         将本次运行 case 的结果组装
         :return:

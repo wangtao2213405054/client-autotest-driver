@@ -22,7 +22,7 @@ class Appium:
 
     def find_elements_send_keys(self, by, value, content, index=0, name=None) -> None: ...
 
-    def get_window_size(self) -> tuple: ...
+    def get_window_size(self) -> tuple[int, int]: ...
 
     def wait_elements_appear(self, by, value, index=0, name=None, wait_time=5, interval=0.5) -> tuple[bool, str]: ...
 
@@ -61,7 +61,7 @@ class Appium:
     def uninstall(self, bundle_id):
         """
         卸载当前应用程序
-        :param bundle_id: 安装包id, ios: bundleId android: app package
+        :param bundle_id: 安装包id, ios: bundleId android: clientele package
         :return:
         """
 
@@ -70,9 +70,9 @@ class Appium:
 
             return self.driver.remove_app(bundle_id)
 
-    def get_android_bundle(self):
+    def get_android_bundle(self) -> tuple[str, str]:
         """
-        获取当前 Android 设备运行包的 app package and app activity
+        获取当前 Android 设备运行包的 clientele package and clientele activity
         :return:
         """
 
@@ -84,7 +84,7 @@ class Appium:
         return package, activity
 
     @staticmethod
-    def _swipe(width, height, start, end):
+    def _swipe(width, height, start, end) -> dict:
         swipe = dict(
             vertical=dict(desc='纵向滑动', value=[0.5 * width, start * height, 0.5 * width, end * height]),
             horizontal=dict(desc='横向滑动', value=[start * width, 0.5 * height, end * width, 0.5 * height])

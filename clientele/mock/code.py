@@ -3,9 +3,8 @@
 
 # 生成 mock.py 相关的代码
 
-import utils
+from clientele import utils, mock
 import string
-import mock
 
 
 class CreateMockCode:
@@ -59,7 +58,7 @@ class CreateMockCode:
 
         return _code
 
-    def create_file(self, filename='clientMockServiceCode.py'):
+    def create_file(self, filename='clientMockServiceCode.py') -> str:
         """
         创建 mitmproxy 指定脚本的 .py 文件
         :param filename: 要创建的文件名称

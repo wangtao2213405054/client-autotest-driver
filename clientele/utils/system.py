@@ -49,5 +49,13 @@ def usage_prot(ip: str, prot: int) -> bool:
     return _result == 0
 
 
+def get_host() -> str:
+    """
+    获取本机IP地址
+    :return:
+    """
+    return socket.gethostbyname(socket.gethostname())
+
+
 if __name__ == '__main__':
-    print(kill_prot(8888))
+    print(get_host())

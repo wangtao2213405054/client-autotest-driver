@@ -73,14 +73,16 @@ def cut(infile, area: tuple, aspect: tuple[int, int]) -> str:
     return infile
 
 
-def gif(paths: list[str], save_path: str, duration: int = 1.5):
+def gif(paths: list[str], infile: str, duration: int = 1.5) -> str:
     """
     将图片转换为 gif 动图
     :param paths: 要转换图片的列表
-    :param save_path: gif 图片的保存路径
+    :param infile: gif 图片的保存路径
     :param duration: 图片切换的间隔
     :return:
     """
 
     frames = list(map(lambda x: imageio.imread(x), paths))
-    imageio.mimsave(save_path, frames, 'GIF', duration=duration)
+    imageio.mimsave(infile, frames, 'GIF', duration=duration)
+
+    return infile

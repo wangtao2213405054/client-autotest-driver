@@ -4,7 +4,7 @@
 from logging.handlers import RotatingFileHandler
 
 import logging
-import utils
+from clientele import utils
 import sys
 import os
 
