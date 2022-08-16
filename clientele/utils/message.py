@@ -3,10 +3,16 @@
 
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-
-import requests
-import smtplib
 from clientele import utils
+
+import urllib.parse
+import requests
+import logging
+import smtplib
+import hashlib
+import base64
+import time
+import hmac
 import os
 import re
 
@@ -73,18 +79,54 @@ class DintTalk:
     详情请看钉钉开放平台官网: https://open.dingtalk.com/document/group/custom-robot-access
     """
 
-    def __init__(self, token, mobile: list = None, user: list = None, own: bool = False):
+    def __init__(self, webhook, secret=None, mobile: list = None, user: list = None, own: bool = False):
         """
         发送钉钉机器人消息
-        :param token: 群机器人的 Token
+        :param webhook: 群机器人的 webhook
         :param mobile: 通过手机号 @ 群聊中的人 [mobile, ....]
         :param user: 通过用户id @ 群聊中的人 [id, ...]
         :param own: 是否 @ 所有人
         """
-        self.url = f'https://oapi.dingtalk.com/robot/send?access_token={token}'
+        self.url = webhook
         self.body = {
                 'at': dict(atMobiles=mobile, atUserIds=user, isAtAll=own)
             }
+        if secret:
+            timestamp, sign = self.sign(secret)
+            self.url += f'&timestamp={timestamp}&sign={sign}'
+
+    @staticmethod
+    def sign(secret) -> tuple[str, str]:
+        """
+        生成钉钉机器人签名
+        :return: timestamp, sign
+        """
+        timestamp = str(round(time.time() * 1000))
+        secret_enc = secret.encode('utf-8')
+        string_to_sign = '{}\n{}'.format(timestamp, secret)
+        string_to_sign_enc = string_to_sign.encode('utf-8')
+        hmac_code = hmac.new(secret_enc, string_to_sign_enc, digestmod=hashlib.sha256).digest()
+        sign = urllib.parse.quote_plus(base64.b64encode(hmac_code))
+        return timestamp, sign
+
+    @property
+    def request(self):
+        try:
+            response = requests.request('POST', self.url, json=self.body)
+            if response.status_code != 200:
+                logging.error(f'发送机器人信息失败, 服务状态码 "{response.status_code}"')
+                return
+
+            errcode = response.json().get('errcode')
+            errmsg = response.json().get('errmsg')
+            if errcode != 0:
+                logging.error(f'发送机器人信息失败, 错误信息: {errmsg}')
+                return
+
+            return response.json()
+
+        except Exception as e:
+            logging.error(f'发送机器人信息报错: {e}')
 
     def text(self, text: str) -> requests.request:
         """
@@ -94,7 +136,7 @@ class DintTalk:
         """
         self.body['text'] = dict(content=text)
         self.body['msgtype'] = 'text'
-        return requests.request('POST', self.url, self.body)
+        return self.request
 
     def link(self, title, text, url, image) -> requests.request:
         """
@@ -112,7 +154,7 @@ class DintTalk:
             picUrl=image
         )
         self.body['msgtype'] = 'link'
-        return requests.request('POST', self.url, self.body)
+        return self.request
 
     def markdown(self, title, text) -> requests.request:
         """
@@ -126,7 +168,7 @@ class DintTalk:
             text=text
         )
         self.body['msgtype'] = 'markdown'
-        return requests.request('POST', self.url, self.body)
+        return self.request
 
     def action(self, title, text) -> requests.request:
         """
@@ -140,7 +182,7 @@ class DintTalk:
             text=text
         )
         self.body['msgtype'] = 'actionCard'
-        return requests.request('POST', self.url, self.body)
+        return self.request
 
     def feed(self, links) -> requests.request:
         """
@@ -150,4 +192,12 @@ class DintTalk:
         """
         self.body['feedCard'] = dict(links=links)
         self.body['msgtype'] = 'feedCard'
-        return requests.request('POST', self.url, self.body)
+        return self.request
+
+
+if __name__ == '__main__':
+    _message = DintTalk(
+        '',
+        'SEC8a261e2b2457e4efc993f27fdd6d65579cbd6f7f75b83c06f84186d1707ce413'
+    )
+    _message.text('测试一下!!!!!!!!!!')
