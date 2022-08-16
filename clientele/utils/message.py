@@ -73,7 +73,7 @@ class Email:
         _smtp.quit()
 
 
-class DintTalk:
+class DingTalk:
     """
     钉钉机器人封装
     详情请看钉钉开放平台官网: https://open.dingtalk.com/document/group/custom-robot-access
