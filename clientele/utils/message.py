@@ -196,7 +196,7 @@ class DingTalk:
 
 
 if __name__ == '__main__':
-    _message = DintTalk(
+    _message = DingTalk(
         '',
         'SEC8a261e2b2457e4efc993f27fdd6d65579cbd6f7f75b83c06f84186d1707ce413'
     )
