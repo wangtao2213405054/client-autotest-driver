@@ -19,6 +19,7 @@ import re
 
 class Email:
     """ 邮件发送 """
+
     def __init__(self, mail_host, sender, password, receivers: list, title, **kwargs):
         """
         初始化 email 类
@@ -89,8 +90,8 @@ class DingTalk:
         """
         self.url = webhook
         self.body = {
-                'at': dict(atMobiles=mobile, atUserIds=user, isAtAll=own)
-            }
+            'at': dict(atMobiles=mobile, atUserIds=user, isAtAll=own)
+        }
         if secret:
             timestamp, sign = self.sign(secret)
             self.url += f'&timestamp={timestamp}&sign={sign}'
@@ -195,9 +196,109 @@ class DingTalk:
         return self.request
 
 
+class Lark:
+    """
+    飞书机器人封装
+    详情请查看官方地址: https://open.feishu.cn/document/ukTMukTMukTM/ucTM5YjL3ETO24yNxkjN#d65d109d
+    """
+
+    def __init__(self, webhook, secret=None):
+        self.url = webhook
+        self.body = {}
+        if secret:
+            timestamp, sign = self.sign(secret)
+            self.body['timestamp'] = timestamp
+            self.body['sign'] = sign
+
+    @staticmethod
+    def sign(secret):
+        # 拼接timestamp和secret
+        timestamp = int(time.time())
+        string_to_sign = '{}\n{}'.format(timestamp, secret)
+        hmac_code = hmac.new(string_to_sign.encode("utf-8"), digestmod=hashlib.sha256).digest()
+
+        # 对结果进行base64处理
+        sign = base64.b64encode(hmac_code).decode('utf-8')
+
+        return timestamp, sign
+
+    @property
+    def request(self):
+        try:
+            response = requests.request('POST', self.url, json=self.body)
+
+            if response.status_code != 200:
+                logging.info(f'发送飞书通知错误, 状态码: {response.status_code}')
+                return
+
+            code = response.json().get('code')
+            if code:
+                logging.info(f'发送飞书通知错误, 错误信息: {response.json().get("msg")}')
+                return
+
+            return response.json()
+
+        except Exception as e:
+            logging.error(e)
+
+    def text(self, text):
+        self.body['msg_type'] = 'text'
+        self.body['content'] = dict(text=text)
+        return self.request
+
+    def interactive(self, title, content, button_text, url):
+        self.body['msg_type'] = 'interactive'
+        self.body['card'] = {
+            "config": {
+                "wide_screen_mode": True
+            },
+            "header": {
+                "template": "turquoise",
+                "title": {
+                    "content": title,
+                    "tag": "plain_text"
+                }
+            },
+            "i18n_elements": {
+                "zh_cn": [
+                    {
+                        "alt": {
+                            "content": "",
+                            "tag": "plain_text"
+                        },
+                        "img_key": "img_v2_bfd72a81-1533-4699-995d-12a675708d0g",
+                        "tag": "img"
+                    },
+                    {
+                        "tag": "div",
+                        "text": {
+                            "content": content,
+                            "tag": "lark_md"
+                        }
+                    },
+                    {
+                        "actions": [
+                            {
+                                "tag": "button",
+                                "text": {
+                                    "content": button_text,
+                                    "tag": "plain_text"
+                                },
+                                "type": "primary",
+                                "url": url
+                            }
+                        ],
+                        "tag": "action"
+                    }
+                ]
+            }
+        }
+        return self.request
+
+
 if __name__ == '__main__':
-    _message = DingTalk(
+    __message = Lark(
         '',
-        'SEC8a261e2b2457e4efc993f27fdd6d65579cbd6f7f75b83c06f84186d1707ce413'
+        ''
     )
-    _message.text('测试一下!!!!!!!!!!')
+    __message.interactive('测试报告通知', '测试呀', '查看详情报告', 'https://www.baidu.com')
