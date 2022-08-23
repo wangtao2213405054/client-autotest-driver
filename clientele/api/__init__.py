@@ -3,9 +3,11 @@
 
 from .login import Login
 from .message import Message
+from .request import request
 
 
 __all__ = [
     'Login',
-    'Message'
+    'Message',
+    'request'
 ]

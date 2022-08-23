@@ -29,7 +29,7 @@ def logger(level: INFO) -> None:
     formatter = logging.Formatter('%(asctime)s %(filename)s [line:%(lineno)d] %(levelname)s %(message)s')
 
     # 设置存储文件 log
-    log_handle = RotatingFileHandler(_path, maxBytes=_LOG_BYTES, backupCount=_LOG_COUNT)
+    log_handle = RotatingFileHandler(_path, maxBytes=_LOG_BYTES, backupCount=_LOG_COUNT, encoding='utf-8')
     log_handle.setFormatter(formatter)
 
     # 设置控制台 log
