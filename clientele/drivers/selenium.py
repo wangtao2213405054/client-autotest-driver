@@ -97,7 +97,7 @@ class Selenium:
         logging.info('正在前进到下一级页面')
         self.driver.forward()
 
-    def switch_window(self, window) -> None:
+    def switch_window(self, window: int) -> None:
         """
         切换窗口, 需要一个窗口位置
         """

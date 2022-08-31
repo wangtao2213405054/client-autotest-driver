@@ -48,7 +48,7 @@ class Appium:
     def set_location(self, latitude, longitude, altitude):
         """
         设置当前设备处于的位置
-        :param latitude: 维度
+        :param latitude: 纬度
         :param longitude: 经度
         :param altitude: 高度
         :return:
@@ -84,14 +84,14 @@ class Appium:
         return package, activity
 
     @staticmethod
-    def _swipe(width, height, start, end) -> dict:
+    def _swipe(width, height, start: float, end: float) -> dict:
         swipe = dict(
             vertical=dict(desc='纵向滑动', value=[0.5 * width, start * height, 0.5 * width, end * height]),
             horizontal=dict(desc='横向滑动', value=[start * width, 0.5 * height, end * width, 0.5 * height])
         )
         return swipe
 
-    def find_window_swipe(self, handle, start, end, duration=0.5):
+    def find_window_swipe(self, handle, start: float, end: float, duration=0.5):
         """
         在当前设备上滑动
         开始位置和结束位置分别需要一个百分比小数
@@ -118,7 +118,7 @@ class Appium:
 
         return self.driver.swipe(*direction.get('value'), int(duration))
 
-    def find_element_swipe(self, by, value, index=0, name=None, handle='vertical', start=0.8, end=0.2, wait=0.5):
+    def find_element_swipe(self, by, value, index=0, name=None, handle='vertical', start=0.8, end=0.2, duration=0.5):
         """
         寻找到指定的元素后在元素中进行按压滑动
         :param by: 元素类型
@@ -128,10 +128,10 @@ class Appium:
         :param handle: 滑动方向
         :param start: 开始位置比例
         :param end: 结束位置比例
-        :param wait: 滑动时间
+        :param duration: 滑动时间
         :return:
         """
-        wait *= 1000
+        duration *= 1000
         start_x, start_y = self.find_elements_location(by, value, index, name)
         width, height = self.find_elements_size(by, value, index, name)
         width += start_x
@@ -141,4 +141,4 @@ class Appium:
         axis = swipe.get(handle)
 
         action = TouchAction(self.driver)
-        return action.press(*axis[0: 2]).wait(int(wait)).move_to(*axis[2: 4]).release().perform()
+        return action.press(*axis[0: 2]).wait(int(duration)).move_to(*axis[2: 4]).release().perform()
