@@ -19,7 +19,7 @@ class DriversServer:
         实例化类
         :param kwargs: 设备的配置文件信息
         """
-        self.platform = kwargs.get('platform')
+        self.platform = kwargs.pop('platform', None)
         self.conf = kwargs
 
         if self.platform.upper() == 'iOS'.upper() and platform.system() == 'Windows':
@@ -31,11 +31,11 @@ class DriversServer:
         """
         启动 appium 服务器
         """
-        _port = self.conf.get('appiumPort')
+        _port = self.conf.pop('appiumPort', None)
         _order = f'appium -a 127.0.0.1 -p {_port} --session-override'
 
         if platform.system() == 'Darwin':
-            _agent_port = self.conf.get('webdriverPort')
+            _agent_port = self.conf.pop('webdriverPort', None)
             _order += f' --webdriveragent-port {_agent_port}'
 
         os.popen(_order)
@@ -47,7 +47,7 @@ class DriversServer:
         等安装后查看 xcodebuild 具体的运行方式
         """
         _webdriver_path = ''
-        _udid = self.conf.get('udid')
+        _udid = self.conf.pop('udid', None)
         _order = f'xcodebuild -project {_webdriver_path} -scheme WebDriverAgentRunner -destination "id={_udid}" test'
 
         os.popen(_order)
