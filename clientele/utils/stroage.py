@@ -37,8 +37,8 @@ def delete(key: str) -> None:
     :param key:
     :return:
     """
-
-    del memory[key]
+    if key in memory:
+        del memory[key]
 
 
 def clear() -> None:
