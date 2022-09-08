@@ -4,6 +4,8 @@
 # 生成 mock.py 相关的代码
 
 from clientele import utils, mock
+
+import logging
 import string
 
 
@@ -56,6 +58,7 @@ class CreateMockCode:
 
         _code = _head + _methods + _logger
 
+        logging.debug(f'本次创建 {len(self.url_list)} 个 mitmproxy 拦截器')
         return _code
 
     def create_file(self, filename='clientMockServiceCode.py') -> str:
@@ -65,7 +68,7 @@ class CreateMockCode:
         :return: 返回当前 mitmproxy 插件脚本的文件位置
         """
 
-        folder_path = utils.storage('mock')
+        folder_path = utils.set_path('mock')
         file_path = utils.os.path.join(folder_path, filename)
         with open(file_path, 'w', encoding='utf-8') as file:
             file.write(self.code)

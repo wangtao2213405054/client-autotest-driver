@@ -4,6 +4,7 @@
 from PIL import Image
 import imageio.v2 as imageio
 
+import logging
 import os
 
 
@@ -32,6 +33,8 @@ def compress(infile, target=100, step=10, quality=80) -> str:
 
         quality -= step
 
+    logging.debug(f'{infile} 图片 压缩至 {target} KB')
+
     return infile
 
 
@@ -49,7 +52,10 @@ def measure(infile, multiple) -> str:
     height *= multiple
 
     image = image.resize((int(width), int(height)), Image.ANTIALIAS)
+    width, height = image.size
     image.save(infile)
+
+    logging.debug(f'{infile} 图片尺寸调整为 {width}x{height}')
 
     return infile
 
@@ -70,6 +76,8 @@ def cut(infile, area: tuple, aspect: tuple[int, int]) -> str:
     result.paste(image, area)
     result.save(infile)
 
+    logging.debug(f'已将{infile}图片 {area} 区域裁切')
+
     return infile
 
 
@@ -84,5 +92,7 @@ def gif(paths: list[str], infile: str, duration: int = 1.5) -> str:
 
     frames = list(map(lambda x: imageio.imread(x), paths))
     imageio.mimsave(infile, frames, 'GIF', duration=duration)
+
+    logging.debug(f'已将 {len(paths)} 张图片改变为动图')
 
     return infile

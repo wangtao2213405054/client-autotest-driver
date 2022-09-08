@@ -67,11 +67,16 @@ class Email:
         param = MIMEText(self.style, 'html', 'utf-8')
         _message.attach(param)
 
-        _smtp = smtplib.SMTP()
-        _smtp.connect(self.mail_host, 25)
-        _smtp.login(self.sender, self.password)
-        _smtp.sendmail(self.sender, self.receivers, _message.as_string())
-        _smtp.quit()
+        logging.debug(f'本次邮件接收人共 {len(self.receivers)} 位, 发送人为: {self.sender}')
+        try:
+            _smtp = smtplib.SMTP()
+            _smtp.connect(self.mail_host, 25)
+            _smtp.login(self.sender, self.password)
+            _smtp.sendmail(self.sender, self.receivers, _message.as_string())
+            _smtp.quit()
+            logging.info('邮件发送成功')
+        except Exception as e:
+            logging.error(f'邮件发送失败: {e}')
 
 
 class DingTalk:
@@ -124,6 +129,7 @@ class DingTalk:
                 logging.error(f'发送机器人信息失败, 错误信息: {errmsg}')
                 return
 
+            logging.info('钉钉机器人消息发送成功')
             return response.json()
 
         except Exception as e:
@@ -236,6 +242,7 @@ class Lark:
                 logging.info(f'发送飞书通知错误, 错误信息: {response.json().get("msg")}')
                 return
 
+            logging.info('飞书机器人消息发送成功')
             return response.json()
 
         except Exception as e:

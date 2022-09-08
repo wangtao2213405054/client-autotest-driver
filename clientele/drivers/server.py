@@ -38,6 +38,8 @@ class DriversServer:
             _agent_port = self.conf.pop('webdriverPort', None)
             _order += f' --webdriveragent-port {_agent_port}'
 
+        logging.debug(f'启动 appium 服务器, 端口: {_port}')
+        logging.debug(f'启动命令: {_order}')
         os.popen(_order)
 
     def start_webdriver(self) -> None:
@@ -50,6 +52,8 @@ class DriversServer:
         _udid = self.conf.pop('udid', None)
         _order = f'xcodebuild -project {_webdriver_path} -scheme WebDriverAgentRunner -destination "id={_udid}" test'
 
+        logging.debug(f'启动 WebDriverAgent 服务, 指定设备udid: {_udid}')
+        logging.debug(f'启动命令: {_order}')
         os.popen(_order)
 
     def run(self) -> None:

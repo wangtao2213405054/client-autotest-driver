@@ -4,6 +4,8 @@
 # 对 mock 的数据进行更新
 
 from clientele import utils, mock
+
+import logging
 import json
 import os
 
@@ -18,7 +20,7 @@ def reset_value(url, value, coord: list[str]):
     """
 
     url = mock.url_to_class(url)
-    file_folder = utils.storage('mock')
+    file_folder = utils.set_path('mock')
     file_path = os.path.join(file_folder, f'{url}.json')
 
     # 修改文件内容
@@ -52,6 +54,8 @@ def reset_value(url, value, coord: list[str]):
     update_data = json.dumps(data, ensure_ascii=False, indent=2)
     with open(file_path, 'w', encoding='utf-8') as file:
         file.write(update_data)
+
+    logging.info(f'已将 {url} 接口中的 {new_data[0][coord[0]]} 值修改为: {value}')
 
     return data
 

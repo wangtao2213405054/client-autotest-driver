@@ -3,6 +3,7 @@
 
 import platform
 import warnings
+import logging
 import socket
 import os
 import re
@@ -21,7 +22,9 @@ def kill_prot(prot: int) -> None:
         for item in content_list:
             item = item.strip()
             if item.isdigit():
-                os.popen(f'kill -9 {item}')
+                _order = f'kill -9 {item}'
+                logging.debug(f'关闭进程命令: {_order}')
+                os.popen(_order)
 
     elif _system == 'Windows':
         # 修复 windows 下运行 kill 方法会关闭主进程的 bug
@@ -30,11 +33,16 @@ def kill_prot(prot: int) -> None:
             item = item.strip()
             pid_list = re.findall(r'\d+$', item)
             if pid_list:
-                os.popen(f'taskkill -t -f /pid {pid_list[0]}')
+                _order = f'taskkill -t -f /pid {pid_list[0]}'
+                logging.debug(f'关闭进程命令: {_order}')
+                os.popen(_order)
                 break
 
     else:
         warnings.warn('暂不支持的系统类型')
+        return
+
+    logging.debug(f'已关闭 {prot} 端口进程')
 
 
 def usage_prot(ip: str, prot: int) -> bool:
@@ -45,7 +53,7 @@ def usage_prot(ip: str, prot: int) -> bool:
     """
     _socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     _result = _socket.connect_ex((ip, prot))
-
+    logging.debug(f'{prot} 端口处于 {"占用" if _result == 0 else "空闲"} 状态')
     return _result == 0
 
 
@@ -54,7 +62,9 @@ def get_host() -> str:
     获取本机IP地址
     :return:
     """
-    return socket.gethostbyname(socket.gethostname())
+    _ip = socket.gethostbyname(socket.gethostname())
+    logging.debug(f'本机IP地址: {_ip}')
+    return _ip
 
 
 if __name__ == '__main__':

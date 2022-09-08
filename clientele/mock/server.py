@@ -4,6 +4,7 @@
 # 启动 mitmproxy 相关服务
 
 import platform
+import logging
 import os
 import re
 
@@ -27,6 +28,8 @@ def start_mitmproxy_server(code_file, prot, domain_list):
         _filter = rf" --ignore-hosts '^(?![0-9\.]+:){_domain}'"
         _order += _filter
 
+    logging.debug(f'准备启动 mitmproxy 服务器, 端口: {prot}')
+    logging.debug(f'启动命令: {_order}')
     os.popen(_order)
 
 

@@ -6,7 +6,7 @@ from .path import *
 from .system import *
 from .logger import *
 from .message import Email, DingTalk
-from .stroage import add, delete, clear, get
+from .storage import add, delete, clear, get
 
 __all__ = [
     'Email',

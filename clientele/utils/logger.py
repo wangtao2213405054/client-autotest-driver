@@ -24,7 +24,7 @@ def logger(level: INFO) -> None:
     :param level: 日志等级
     :return:
     """
-    _path = os.path.abspath(os.path.join(utils.storage('logs'), 'log.log'))
+    _path = os.path.abspath(os.path.join(utils.set_path('logs'), 'log.log'))
     # 日志格式
     formatter = logging.Formatter('%(asctime)s %(filename)s [line:%(lineno)d] %(levelname)s %(message)s')
 
