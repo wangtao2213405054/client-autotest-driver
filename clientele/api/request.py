@@ -3,13 +3,14 @@
 
 from clientele.conf.env import env_map
 from clientele import utils, exceptions
+from typing import Union, Dict, List
 
 import requests
 import logging
 import hashlib
 
 
-def request(method, uri, **kwargs):
+def request(method: str, uri: str, **kwargs) -> Union[Dict, List, str, int, None]:
     """
     基于 requests 库进行了二次业务封装
     所有跟 clientele 服务器做交互的库都应该调用次方法
@@ -18,10 +19,10 @@ def request(method, uri, **kwargs):
     :return: 返回服务器返回消息体中的 data 数据
     """
 
-    _class = env_map.get(utils.environment)
+    _class = env_map.get(utils.get('environment'))
     url = f'{_class.DOMAIN}{_class.PROFILE}{uri}'
     header = dict(
-        token=utils.token
+        token=utils.get('token')
     )
 
     response = requests.request(method, url, headers=header, **kwargs)
@@ -39,7 +40,7 @@ def request(method, uri, **kwargs):
     return body.get('data')
 
 
-def sha1_secret(secret: str):
+def sha1_secret(secret: str) -> str:
     """
     使用sha1加密算法
     :return: 返回str加密后的字符串
@@ -51,4 +52,4 @@ def sha1_secret(secret: str):
 
 
 if __name__ == '__main__':
-    print(sha1_secret('123456'))
+    print(sha1_secret('123456'), type(sha1_secret('123456')))

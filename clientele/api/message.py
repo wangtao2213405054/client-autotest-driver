@@ -9,7 +9,7 @@ from clientele import api
 class Message:
     """ 获取服务器通知配置信息 """
 
-    def __init__(self, project_id):
+    def __init__(self, project_id: int):
         self.project_id = project_id
 
     @property

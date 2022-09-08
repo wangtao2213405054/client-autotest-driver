@@ -4,8 +4,12 @@
 from selenium.webdriver.remote.webelement import WebElement
 from appium.webdriver import Remote
 from appium.webdriver.common.touch_action import TouchAction
+from appium.protocols.webdriver.can_execute_commands import CanExecuteCommands
+from typing import TypeVar, Union, Optional
 
 import logging
+
+T = TypeVar('T', bound=CanExecuteCommands)
 
 
 class Appium:
@@ -14,27 +18,43 @@ class Appium:
     def __init__(self, driver: Remote):
         self.driver = driver
 
-    def find_elements(self, by, value) -> list[WebElement]: ...
+    def find_elements(self, by: str, value: str) -> list[WebElement]: ...
 
-    def find_elements_click(self, by, value, index=0, name=None) -> None: ...
+    def find_elements_click(self, by: str, value: str, index: int = 0, name: str = None) -> None: ...
 
-    def find_elements_clear(self, by, value, index=0, name=None) -> None: ...
+    def find_elements_clear(self, by: str, value: str, index: int = 0, name: str = None) -> None: ...
 
-    def find_elements_send_keys(self, by, value, content, index=0, name=None) -> None: ...
+    def find_elements_send_keys(self, by: str, value: str, content: str, index: int = 0, name: str = None) -> None: ...
 
     def get_window_size(self) -> tuple[int, int]: ...
 
-    def wait_elements_appear(self, by, value, index=0, name=None, wait_time=5, interval=0.5) -> tuple[bool, str]: ...
+    def wait_elements_appear(
+            self,
+            by: str,
+            value: str,
+            index: int = 0,
+            name: str = None,
+            wait_time: Union[int, float] = 5,
+            interval: Union[int, float] = 0.5
+    ) -> tuple[bool, str]: ...
 
-    def find_elements_location(self, by, value, index=0, name=None) -> tuple[int, int]: ...
+    def find_elements_location(self, by: str, value: str, index: int = 0, name: str = None) -> tuple[int, int]: ...
 
-    def find_elements_size(self, by, value, index=0, name=None) -> tuple[int, int]: ...
+    def find_elements_size(self, by: str, value: str, index: int = 0, name: str = None) -> tuple[int, int]: ...
 
-    def screenshots(self, file_path=None, is_compression=True) -> str: ...
+    def screenshots(self, file_path: str = None, is_compression: bool = True) -> str: ...
 
-    def find_elements_screenshots(self, by, value, index=0, name=None, file_path=None, is_compression=False) -> str: ...
+    def find_elements_screenshots(
+            self,
+            by: str,
+            value: str,
+            index: int = 0,
+            name: str = None,
+            file_path: str = None,
+            is_compression: bool = False
+    ) -> str: ...
 
-    def background(self, timer):
+    def background(self, timer: int) -> T:
         """
         将应用置于后台
         :param timer: 置于后台的时间
@@ -45,7 +65,7 @@ class Appium:
 
         return self.driver.background_app(timer)
 
-    def set_location(self, latitude, longitude, altitude):
+    def set_location(self, latitude: Union[float, str], longitude: Union[float, str], altitude: Union[float, str]) -> T:
         """
         设置当前设备处于的位置
         :param latitude: 纬度
@@ -58,7 +78,7 @@ class Appium:
 
         return self.driver.set_location(latitude, longitude, altitude)
 
-    def uninstall(self, bundle_id):
+    def uninstall(self, bundle_id: str) -> T:
         """
         卸载当前应用程序
         :param bundle_id: 安装包id, ios: bundleId android: clientele package
@@ -84,14 +104,14 @@ class Appium:
         return package, activity
 
     @staticmethod
-    def _swipe(width, height, start: float, end: float) -> dict:
+    def _swipe(width: Union[int, float], height: Union[int, float], start: float, end: float) -> dict:
         swipe = dict(
             vertical=dict(desc='纵向滑动', value=[0.5 * width, start * height, 0.5 * width, end * height]),
             horizontal=dict(desc='横向滑动', value=[start * width, 0.5 * height, end * width, 0.5 * height])
         )
         return swipe
 
-    def find_window_swipe(self, handle, start: float, end: float, duration=0.5):
+    def find_window_swipe(self, handle: str, start: float, end: float, duration: Union[int, float]) -> Optional[T]:
         """
         在当前设备上滑动
         开始位置和结束位置分别需要一个百分比小数
@@ -118,7 +138,17 @@ class Appium:
 
         return self.driver.swipe(*direction.get('value'), int(duration))
 
-    def find_element_swipe(self, by, value, index=0, name=None, handle='vertical', start=0.8, end=0.2, duration=0.5):
+    def find_element_swipe(
+            self,
+            by: str,
+            value: str,
+            index: int = 0,
+            name: str = None,
+            handle: str = 'vertical',
+            start: float = 0.8,
+            end: float = 0.2,
+            duration: float = 0.5
+    ) -> 'TouchAction':
         """
         寻找到指定的元素后在元素中进行按压滑动
         :param by: 元素类型

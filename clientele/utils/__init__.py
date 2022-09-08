@@ -3,12 +3,16 @@
 
 from .images import *
 from .path import *
-from .memory import *
 from .system import *
 from .logger import *
 from .message import Email, DingTalk
+from .stroage import add, delete, clear, get
 
 __all__ = [
     'Email',
-    'DingTalk'
+    'DingTalk',
+    'add',
+    'delete',
+    'clear',
+    'get'
 ]

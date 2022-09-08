@@ -8,21 +8,20 @@ from clientele import utils
 class Login:
     """ clientele 登录 """
 
-    def __init__(self, username, password):
+    def __init__(self, username: str, password: str):
         self.username = username
         self.password = sha1_secret(password)
 
-    def token(self):
+    def token(self) -> request:
         body = dict(
             username=self.username,
             password=self.password
         )
         response = request('POST', '/user/login', json=body)
-        utils.token = response.get('token')
+        utils.add('token', response.get('token'))
         return response
 
 
 if __name__ == '__main__':
     _login = Login('coke@qq.com', '123456')
     print(_login.token())
-    print(utils.token)

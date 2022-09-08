@@ -17,7 +17,7 @@ def storage(*args: str, name='storage') -> str:
     """
 
     storage_path = same_path
-    base_folder = (name, utils.projectName, utils.device) + args
+    base_folder = (name, utils.get('projectName'), utils.get('device')) + args
     for item in base_folder:
         storage_path = os.path.join(storage_path, item)
         if not os.path.exists(storage_path):
@@ -35,4 +35,4 @@ def get_conf_path() -> str:
 
 
 if __name__ == '__main__':
-    print(get_conf_path())
+    print(storage())

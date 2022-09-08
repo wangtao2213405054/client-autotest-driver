@@ -4,9 +4,10 @@
 from selenium.webdriver import Remote
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.common.exceptions import NoSuchElementException
+from clientele import utils, drivers
+from typing import Union
 
 import logging
-from clientele import utils, drivers
 import time
 import os
 
@@ -14,7 +15,7 @@ import os
 class Driver(drivers.Selenium, drivers.Appium):
     """ 基于 selenium 和 appium 通用模块的封装, 如果为独有方法则封装在对象的 class 中 """
 
-    def __init__(self, driver: Remote, element_wait=5):
+    def __init__(self, driver: Remote, element_wait: Union[int, float] = 5):
         """
         初始化类, 对于 基础操作的二次封装, 继承于 Selenium 和 Appium 类
         :param driver: selenium or appium 的驱动类
@@ -25,7 +26,7 @@ class Driver(drivers.Selenium, drivers.Appium):
         driver.implicitly_wait(element_wait)
         self.driver = driver
 
-    def find_elements(self, by, value, name=None) -> list[WebElement]:
+    def find_elements(self, by: str, value: str, name: str = None) -> list[WebElement]:
         """
         查询元素, 返回 list
         :param by: 元素类型
@@ -40,7 +41,7 @@ class Driver(drivers.Selenium, drivers.Appium):
 
         return elements
 
-    def find_elements_click(self, by, value, index=0, name=None) -> None:
+    def find_elements_click(self, by: str, value: str, index: int = 0, name: str = None) -> None:
         """
         点击操作
         :param by: 元素类型
@@ -58,7 +59,7 @@ class Driver(drivers.Selenium, drivers.Appium):
 
         return elements[index].click()
 
-    def find_elements_clear(self, by, value, index=0, name=None) -> None:
+    def find_elements_clear(self, by: str, value: str, index: int = 0, name: str = None) -> None:
         """
         清空文本输入框
         :param by: 元素类型
@@ -76,7 +77,7 @@ class Driver(drivers.Selenium, drivers.Appium):
 
         return elements[index].clear()
 
-    def find_elements_send_keys(self, by, value, content, index=0, name=None) -> None:
+    def find_elements_send_keys(self, by: str, value: str, content: str, index: str = 0, name: str = None) -> None:
         """
         在文本框中进行输入
         :param by: 元素类型
@@ -95,7 +96,7 @@ class Driver(drivers.Selenium, drivers.Appium):
 
         return elements[index].send_keys(content)
 
-    def find_elements_location(self, by, value, index=0, name=None) -> tuple[int, int]:
+    def find_elements_location(self, by: str, value: str, index: int = 0, name: str = None) -> tuple[int, int]:
         """
         获取当前元素所处的坐标
         :param by: 元素类型
@@ -115,7 +116,7 @@ class Driver(drivers.Selenium, drivers.Appium):
 
         return x, y
 
-    def find_elements_size(self, by, value, index=0, name=None) -> tuple[int, int]:
+    def find_elements_size(self, by: str, value: str, index: int = 0, name: str = None) -> tuple[int, int]:
         """
         查找当前元素所在大小
         :param by: 元素类型
@@ -148,7 +149,15 @@ class Driver(drivers.Selenium, drivers.Appium):
 
         return width, height
 
-    def wait_elements_appear(self, by, value, index=0, name=None, wait_time=5, interval=0.5) -> tuple[bool, str]:
+    def wait_elements_appear(
+            self,
+            by: str,
+            value: str,
+            index: int = 0,
+            name: str = None,
+            wait_time: Union[float, int] = 5,
+            interval: Union[float, int] = 0.5
+    ) -> tuple[bool, str]:
         """
         等待元素出现
         :param by: 元素类型
@@ -179,7 +188,7 @@ class Driver(drivers.Selenium, drivers.Appium):
 
         return _result, _fail_message
 
-    def screenshots(self, file_path=None, is_compression=True) -> str:
+    def screenshots(self, file_path: str = None, is_compression: bool = True) -> str:
         """
         对设备当前屏幕进行截图
         :param file_path: 截图存储路径
@@ -198,7 +207,15 @@ class Driver(drivers.Selenium, drivers.Appium):
 
         return file_path
 
-    def find_elements_screenshots(self, by, value, index=0, name=None, file_path=None, is_compression=False) -> str:
+    def find_elements_screenshots(
+            self,
+            by: str,
+            value: str,
+            index: int = 0,
+            name: str = None,
+            file_path: str = None,
+            is_compression: bool = False
+    ) -> str:
         """
         根据元素进行截图
         :param by: 元素类型

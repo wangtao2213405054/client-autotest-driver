@@ -27,7 +27,7 @@ class DriversServer:
             logging.critical(_message)
             raise SystemError(_message)
 
-    def start_appium(self):
+    def start_appium(self) -> None:
         """
         启动 appium 服务器
         """
@@ -40,7 +40,7 @@ class DriversServer:
 
         os.popen(_order)
 
-    def start_webdriver(self):
+    def start_webdriver(self) -> None:
         """
         启动 webDriver agent 服务器
         由于本机没有安装 xcode ...
@@ -52,7 +52,7 @@ class DriversServer:
 
         os.popen(_order)
 
-    def run(self):
+    def run(self) -> None:
         """
         启动 appium 相关的服务
         """

@@ -5,6 +5,7 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver import Remote
 from clientele import utils
+from typing import Union
 
 import logging
 import json
@@ -16,25 +17,41 @@ class Selenium:
     def __init__(self, driver: Remote):
         self.driver = driver
 
-    def find_elements(self, by, value) -> list[WebElement]: ...
+    def find_elements(self, by: str, value: str) -> list[WebElement]: ...
 
-    def find_elements_click(self, by, value, index=0, name=None) -> None: ...
+    def find_elements_click(self, by: str, value: str, index: int = 0, name: str = None) -> None: ...
 
-    def find_elements_clear(self, by, value, index=0, name=None) -> None: ...
+    def find_elements_clear(self, by: str, value: str, index: int = 0, name: str = None) -> None: ...
 
-    def find_elements_send_keys(self, by, value, content, index=0, name=None) -> None: ...
+    def find_elements_send_keys(self, by: str, value: str, content: str, index: int = 0, name: str = None) -> None: ...
 
     def get_window_size(self) -> tuple[int, int]: ...
 
-    def wait_elements_appear(self, by, value, index=0, name=None, wait_time=5, interval=0.5) -> tuple[bool, str]: ...
+    def wait_elements_appear(
+            self,
+            by: str,
+            value: str,
+            index: int = 0,
+            name: str = None,
+            wait_time: Union[int, float] = 5,
+            interval: Union[float, int] = 0.5
+    ) -> tuple[bool, str]: ...
 
-    def find_elements_location(self, by, value, index=0, name=None) -> tuple[int, int]: ...
+    def find_elements_location(self, by: str, value: str, index: int = 0, name: str = None) -> tuple[int, int]: ...
 
-    def find_elements_size(self, by, value, index=0, name=None) -> tuple[int, int]: ...
+    def find_elements_size(self, by: str, value: str, index: int = 0, name: str = None) -> tuple[int, int]: ...
 
-    def screenshots(self, file_path=None, is_compression=True) -> str: ...
+    def screenshots(self, file_path: str = None, is_compression: bool = True) -> str: ...
 
-    def find_elements_screenshots(self, by, value, index=0, name=None, file_path=None, is_compression=False) -> str: ...
+    def find_elements_screenshots(
+            self,
+            by: str,
+            value: str,
+            index: int = 0,
+            name: str = None,
+            file_path: str = None,
+            is_compression: bool = False
+    ) -> str: ...
 
     def quit(self) -> None:
         """
@@ -56,15 +73,15 @@ class Selenium:
         """
         logging.info('正在获取当前页面的Cookies并存储')
         cookies = self.driver.get_cookies()
-        utils.cookies = json.dumps(cookies)
-        utils.loginStatus = True
+        utils.add('cookies', json.dumps(cookies))
+        utils.add('loginStatus', True)
 
     def write_cookies(self) -> None:
         """
         将 cookies 写入浏览器
         """
         logging.info('正在将已存储的Cookies写入浏览器')
-        for cookie in json.loads(utils.cookies):
+        for cookie in json.loads(utils.get('cookies')):
             self.driver.add_cookie(cookie)
 
     def delete_cookies(self) -> None:
@@ -106,7 +123,7 @@ class Selenium:
         windows = self.driver.window_handles
         self.driver.switch_to.window(windows[window])
 
-    def context_click(self, by, value, index, name) -> None:
+    def context_click(self, by: str, value: str, index: int, name: str) -> None:
         """
         selenium 右击事件
         :param by: 元素属性
@@ -119,7 +136,7 @@ class Selenium:
         element = self.find_elements(by, value)[index]
         ActionChains(self.driver).context_click(element).perform()
 
-    def double_click(self, by, value, index, name) -> None:
+    def double_click(self, by: str, value: str, index: int, name: str) -> None:
         """
         selenium 双击事件
         :param by: 元素属性
@@ -132,7 +149,7 @@ class Selenium:
         element = self.find_elements(by, value)[index]
         ActionChains(self.driver).double_click(element).perform()
 
-    def move_element(self, by, value, index, name) -> None:
+    def move_element(self, by: str, value: str, index: int, name: str) -> None:
         """
         selenium 鼠标悬停事件
         :param by: 元素属性

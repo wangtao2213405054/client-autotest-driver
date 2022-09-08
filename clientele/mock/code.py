@@ -34,7 +34,7 @@ class CreateMockCode:
         """
 
         head_str = string.Template(self._head)
-        _head = head_str.substitute(device=utils.device)
+        _head = head_str.substitute(device=utils.get('device'))
 
         _methods = ''
         _logger = ''
