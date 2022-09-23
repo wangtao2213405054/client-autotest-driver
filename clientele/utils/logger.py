@@ -1,21 +1,35 @@
 # _author: Coke
 # _date: 2022/7/28 15:32
 
-from logging.handlers import RotatingFileHandler
+from clientele import utils
+from logging import config
 
 import logging
-from clientele import utils
-import sys
+import shutil
+import json
 import os
 
 _LOG_BYTES = 1024 * 1024 * 100
 _LOG_COUNT = 10
 
-INFO = logging.INFO
-DEBUG = logging.DEBUG
-ERROR = logging.ERROR
-WARNING = logging.WARNING
-CRITICAL = logging.CRITICAL
+INFO = 'INFO'
+DEBUG = 'DEBUG'
+ERROR = 'ERROR'
+WARNING = 'WARNING'
+CRITICAL = 'CRITICAL'
+
+
+def get_conf():
+    """
+    获取日志配置文件路径
+    :return:
+    """
+    conf_path = os.path.abspath(os.path.join(
+        os.path.dirname(os.path.dirname(__file__)),
+        'conf',
+        'log.json'
+    ))
+    return conf_path
 
 
 def logger(level: INFO) -> None:
@@ -24,23 +38,24 @@ def logger(level: INFO) -> None:
     :param level: 日志等级
     :return:
     """
+
+    base_conf = get_conf()
+    business_conf = os.path.abspath(os.path.join(utils.set_path('logs'), 'log.json'))
+
+    if not os.path.exists(business_conf):
+        shutil.copyfile(base_conf, business_conf)
+
     _path = os.path.abspath(os.path.join(utils.set_path('logs'), 'log.log'))
-    # 日志格式
-    formatter = logging.Formatter('%(asctime)s %(filename)s [line:%(lineno)d] %(levelname)s %(message)s')
 
-    # 设置存储文件 log
-    log_handle = RotatingFileHandler(_path, maxBytes=_LOG_BYTES, backupCount=_LOG_COUNT, encoding='utf-8')
-    log_handle.setFormatter(formatter)
+    with open(business_conf, 'r', encoding='utf-8') as file:
+        read_data = json.loads(file.read())
+        read_data['root']['level'] = level
+        read_data['handlers']['file']['filename'] = _path
 
-    # 设置控制台 log
-    _handle = logging.StreamHandler(stream=sys.stdout)
-    _handle.setFormatter(formatter)
-
-    # 设置日志等级和全局信息
-    logging.basicConfig(level=level, handlers=[_handle])
-    logging.getLogger().addHandler(log_handle)
+    config.dictConfig(read_data)
 
 
 if __name__ == '__main__':
-    logger(DEBUG)
-    logging.error('Test')
+    print(logger(INFO))
+    for item in range(10000):
+        logging.info('Test')

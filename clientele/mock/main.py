@@ -14,12 +14,12 @@ class MockHandler:
     依赖于 mitmproxy
     """
 
-    def __init__(self, prot):
+    def __init__(self, port):
         """
         初始化 Mock 相关信息及配置
-        :param prot: 要启动的端口号
+        :param port: 要启动的端口号
         """
-        self._port = prot
+        self._port = port
         self._domain = self.get_domain
         self._api = self.get_api
         self._code_file = mock.CreateMockCode(self._api).create_file()
@@ -30,10 +30,10 @@ class MockHandler:
         线程启动 mitmproxy 服务器
         :return:
         """
-        _result = utils.usage_prot('127.0.0.1', self._port)
+        _result = utils.usage_port('127.0.0.1', self._port)
         if _result:
             logging.warning(f'端口: {self._port} 已被占用, 准备 kill 掉')
-            utils.kill_prot(self._port)
+            utils.kill_port(self._port)
 
         thread = threading.Thread(
             target=mock.start_mitmproxy_server,

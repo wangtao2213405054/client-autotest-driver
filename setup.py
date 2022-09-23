@@ -16,6 +16,7 @@ setup(
         'requests',
         'pillow',
         'selenium',
-        'imageio'
+        'imageio',
+        'psutil'
     ]
 )

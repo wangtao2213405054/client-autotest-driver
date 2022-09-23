@@ -9,7 +9,7 @@ import os
 import re
 
 
-def start_mitmproxy_server(code_file, prot, domain_list):
+def start_mitmproxy_server(code_file, port, domain_list):
     """
     启动一个 mitmproxy 服务
     windows: windows 文件不会进行过滤
@@ -18,7 +18,7 @@ def start_mitmproxy_server(code_file, prot, domain_list):
     mac 中则需要安装 6.0.2 版本的 mitmproxy 7.x以上的版本无法过滤域名
     """
 
-    _order = f'mitmdump -p {prot} -q -s {code_file}'
+    _order = f'mitmdump -p {port} -q -s {code_file}'
 
     if platform.system() == 'Darwin' or platform.system() == 'Linux':
 
@@ -28,7 +28,7 @@ def start_mitmproxy_server(code_file, prot, domain_list):
         _filter = rf" --ignore-hosts '^(?![0-9\.]+:){_domain}'"
         _order += _filter
 
-    logging.debug(f'准备启动 mitmproxy 服务器, 端口: {prot}')
+    logging.debug(f'准备启动 mitmproxy 服务器, 端口: {port}')
     logging.debug(f'启动命令: {_order}')
     os.popen(_order)
 

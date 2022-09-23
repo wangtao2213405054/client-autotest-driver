@@ -197,7 +197,7 @@ class Driver(drivers.Selenium, drivers.Appium):
         """
         if not file_path:
             folder_path = utils.set_path('screenshots')
-            file_path = os.path.join(folder_path, time.strftime('%Y-%m-%d_%H:%M:%S'))
+            file_path = os.path.join(folder_path, time.strftime('%Y-%m-%d_%H_%M_%S'))
 
         self.driver.get_screenshot_as_file(file_path)
 

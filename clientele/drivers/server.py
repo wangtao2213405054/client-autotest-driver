@@ -60,9 +60,9 @@ class DriversServer:
         """
         启动 appium 相关的服务
         """
-        _appium_thread = threading.Thread(target=self.start_appium)
+        _appium_thread = threading.Thread(target=self.start_appium, daemon=True)
         _appium_thread.start()
 
         if platform.system() == 'Darwin':
-            _webdriver_thread = threading.Thread(target=self.start_webdriver)
+            _webdriver_thread = threading.Thread(target=self.start_webdriver, daemon=True)
             _webdriver_thread.start()
