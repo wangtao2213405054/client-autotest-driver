@@ -2,7 +2,7 @@
 # _date: 2022/8/17 22:14
 
 from clientele.conf.env import env_map
-from clientele import utils, exceptions
+from clientele import globals, exceptions
 from typing import Union, Dict, List
 
 import requests
@@ -19,10 +19,10 @@ def request(method: str, uri: str, **kwargs) -> Union[Dict, List, str, int, None
     :return: 返回服务器返回消息体中的 data 数据
     """
 
-    _class = env_map.get(utils.get('environment'))
+    _class = env_map.get(globals.get('environment'))
     url = f'{_class.DOMAIN}{_class.PROFILE}{uri}'
     header = dict(
-        token=utils.get('token')
+        token=globals.get('token')
     )
 
     response = requests.request(method, url, headers=header, **kwargs)

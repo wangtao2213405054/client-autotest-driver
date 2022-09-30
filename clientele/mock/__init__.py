@@ -3,7 +3,7 @@
 
 from .util import *
 from .code import CreateMockCode
-from .server import start_mitmproxy_server
+from .server import MitmproxyProcess
 from .alter import reset_value
 from .main import MockHandler
 
@@ -23,7 +23,7 @@ from .main import MockHandler
 __all__ = [
     'CreateMockCode',
     'url_to_class',
-    'start_mitmproxy_server',
+    'MitmproxyProcess',
     'reset_value',
     'MockHandler'
 ]

@@ -1,7 +1,7 @@
 # _author: Coke
 # _date: 2022/7/20 17:41
 
-from clientele import utils
+from clientele import globals
 import os
 
 same_path = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
@@ -17,7 +17,7 @@ def set_path(*args: str, name='storage') -> str:
     """
 
     storage_path = same_path
-    base_folder = (name, utils.get('projectName'), utils.get('device')) + args
+    base_folder = (name, globals.get('projectName'), globals.get('device')) + args
     for item in base_folder:
         storage_path = os.path.join(storage_path, item)
         if not os.path.exists(storage_path):

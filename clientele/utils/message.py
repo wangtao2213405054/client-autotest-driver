@@ -4,6 +4,7 @@
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from clientele import utils
+from typing import Union
 
 import urllib.parse
 import requests
@@ -217,7 +218,7 @@ class Lark:
             self.body['sign'] = sign
 
     @staticmethod
-    def sign(secret):
+    def sign(secret) -> tuple[int, str]:
         # 拼接timestamp和secret
         timestamp = int(time.time())
         string_to_sign = '{}\n{}'.format(timestamp, secret)
@@ -229,7 +230,7 @@ class Lark:
         return timestamp, sign
 
     @property
-    def request(self):
+    def request(self) -> Union[dict]:
         try:
             response = requests.request('POST', self.url, json=self.body)
 
@@ -248,64 +249,49 @@ class Lark:
         except Exception as e:
             logging.error(e)
 
-    def text(self, text):
+    def text(self, text) -> request:
         self.body['msg_type'] = 'text'
         self.body['content'] = dict(text=text)
         return self.request
 
-    def interactive(self, title, content, button_text, url):
+    def interactive(self, title, content, button_text, url) -> requests:
         self.body['msg_type'] = 'interactive'
-        self.body['card'] = {
-            "config": {
-                "wide_screen_mode": True
-            },
-            "header": {
-                "template": "turquoise",
-                "title": {
-                    "content": title,
-                    "tag": "plain_text"
-                }
-            },
-            "i18n_elements": {
-                "zh_cn": [
-                    {
-                        "alt": {
-                            "content": "",
-                            "tag": "plain_text"
-                        },
-                        "img_key": "img_v2_bfd72a81-1533-4699-995d-12a675708d0g",
-                        "tag": "img"
-                    },
-                    {
-                        "tag": "div",
-                        "text": {
-                            "content": content,
-                            "tag": "lark_md"
-                        }
-                    },
-                    {
-                        "actions": [
-                            {
-                                "tag": "button",
-                                "text": {
-                                    "content": button_text,
-                                    "tag": "plain_text"
-                                },
-                                "type": "primary",
-                                "url": url
-                            }
-                        ],
-                        "tag": "action"
-                    }
-                ]
-            }
-        }
+        self.body['card'] = {}
+        self.body['card']['config'] = {}
+        self.body['card']['config']['wide_screen_mode'] = True
+
+        self.body['card']['header'] = {}
+        self.body['card']['header']['template'] = 'turquoise'
+        self.body['card']['header']['title'] = {}
+        self.body['card']['header']['title']['content'] = title
+        self.body['card']['header']['title']['tag'] = 'plain_text'
+
+        self.body['card']['i18n_elements'] = {}
+        self.body['card']['i18n_elements']['zh_cn'] = []
+
+        img = {'alt': {}, 'img_key': 'img_v2_bfd72a81-1533-4699-995d-12a675708d0g', 'tag': 'img'}
+        img['alt']['content'] = ''
+        img['alt']['tag'] = 'plain_text'
+
+        div = {'tag': 'div', 'text': {}}
+        div['text']['tag'] = 'lark_md'
+        div['text']['content'] = content
+
+        action = {'actions': [], 'tag': 'action'}
+        actions = {'tag': 'button', 'text': {}, 'type': 'primary', 'url': url}
+        actions['text']['content'] = button_text
+        actions['text']['tag'] = 'plain_text'
+        action['actions'].append(actions)
+
+        for item in [img, div, action]:
+            self.body['card']['i18n_elements']['zh_cn'].append(item)
+
         return self.request
 
 
 if __name__ == '__main__':
     __message = Lark(
-        '',
-        ''
+        'https://open.feishu.cn/open-apis/bot/v2/hook/4ba64e95-0820-46e9-8590-d1114f3d5420',
+        'RZDTRhDXZkEGXTOQgBp8l'
     )
     __message.interactive('测试报告通知', '测试呀', '查看详情报告', 'https://www.baidu.com')

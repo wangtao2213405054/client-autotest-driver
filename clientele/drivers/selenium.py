@@ -4,7 +4,7 @@
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver import Remote
-from clientele import utils
+from clientele import globals
 from typing import Union
 
 import logging
@@ -73,15 +73,15 @@ class Selenium:
         """
         logging.info('正在获取当前页面的Cookies并存储')
         cookies = self.driver.get_cookies()
-        utils.add('cookies', json.dumps(cookies))
-        utils.add('loginStatus', True)
+        globals.add('cookies', json.dumps(cookies))
+        globals.add('loginStatus', True)
 
     def write_cookies(self) -> None:
         """
         将 cookies 写入浏览器
         """
         logging.info('正在将已存储的Cookies写入浏览器')
-        for cookie in json.loads(utils.get('cookies')):
+        for cookie in json.loads(globals.get('cookies')):
             self.driver.add_cookie(cookie)
 
     def delete_cookies(self) -> None:

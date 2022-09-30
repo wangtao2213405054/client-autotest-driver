@@ -1,22 +1,23 @@
-import importlib
-import inspect
-from clientele.drivers import Appium
+import socketio
+import socket
+import time
+
+sio = socketio.Client()
 
 
-if __name__ == '__main__':
-    _module = importlib.import_module('drivers.appium')
-    mo = inspect.getmembers(_module)
-    for item in mo:
-        name, obj = item
-        if inspect.isclass(obj):
-            print(name)
+# @sio.on('message', namespace='/test')
+# def my_event_handler(data):
+#     print(data)
 
-        if inspect.ismethod(obj):
-            print(name)
+@sio.on('returnSystem')
+def my_system_info(data):
+    print(data)
 
-    _class = getattr(_module, 'Appium')
-    print(_class, Appium)
-    _function = getattr(_class, 'find_elements')
 
-    print(_function)
-    _function('2', 'v')
+token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJNYWMiLCJ1c2VyX2lkIjoyLCJkZXZpY2' \
+        'UiOiJNYWMxNCIsImV4cCI6bnVsbH0.fSiTCXvhYS8C338YMvva2feXW24qNnGBK8slD1iEnsQ'
+
+sio.connect('http://127.0.0.1:5000', {'token': token})
+time.sleep(10)
+print('加入房间后展示性能消息')
+sio.emit('joinRoom', {'roomId': 'Windows'})

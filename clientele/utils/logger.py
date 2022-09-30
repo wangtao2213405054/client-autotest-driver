@@ -19,7 +19,7 @@ WARNING = 'WARNING'
 CRITICAL = 'CRITICAL'
 
 
-def get_conf():
+def get_conf() -> str:
     """
     获取日志配置文件路径
     :return:
@@ -57,5 +57,5 @@ def logger(level: INFO) -> None:
 
 if __name__ == '__main__':
     print(logger(INFO))
-    for item in range(10000):
+    for item in range(10):
         logging.info('Test')

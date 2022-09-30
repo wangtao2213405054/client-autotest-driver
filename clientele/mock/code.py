@@ -3,7 +3,7 @@
 
 # 生成 mock.py 相关的代码
 
-from clientele import utils, mock
+from clientele import utils, mock, globals
 
 import logging
 import string
@@ -36,7 +36,7 @@ class CreateMockCode:
         """
 
         head_str = string.Template(self._head)
-        _head = head_str.substitute(device=utils.get('device'))
+        _head = head_str.substitute(device=globals.get('device'))
 
         _methods = ''
         _logger = ''

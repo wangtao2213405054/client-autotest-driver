@@ -13,8 +13,7 @@
     "console": {
       "class": "logging.StreamHandler",
       "formatter": "console",
-      "stream": "ext://sys.stdout",
-      "level": "INFO"
+      "stream": "ext://sys.stdout"
     },
     "file": {
       "class": "logging.handlers.RotatingFileHandler",

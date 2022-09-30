@@ -10,7 +10,8 @@ memory = dict(
     device='iPhone',
     platform='ios',
     ports=[],
-    environment='local'
+    environment='local',
+    token='test'
 )
 
 

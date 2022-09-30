@@ -17,6 +17,8 @@ setup(
         'pillow',
         'selenium',
         'imageio',
-        'psutil'
+        'psutil',
+        'socketio',
+        'websocket-client'
     ]
 )

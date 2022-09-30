@@ -3,9 +3,9 @@
 
 # 对 mock 相关 数据 进行初始化
 
-import threading
-import logging
 from clientele import utils, mock
+
+import logging
 
 
 class MockHandler:
@@ -35,12 +35,13 @@ class MockHandler:
             logging.warning(f'端口: {self._port} 已被占用, 准备 kill 掉')
             utils.kill_port(self._port)
 
-        thread = threading.Thread(
-            target=mock.start_mitmproxy_server,
-            args=(self._code_file, self._port, self._domain),
+        process = mock.MitmproxyProcess(
+            self._code_file,
+            self._port,
+            self._domain,
             daemon=True
         )
-        thread.start()
+        process.start()
 
     @property
     def get_domain(self):

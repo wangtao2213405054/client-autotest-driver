@@ -2,7 +2,7 @@
 # _date: 2022/8/17 22:57
 
 from clientele.api.request import request, sha1_secret
-from clientele import utils
+from clientele import globals
 
 
 class Login:
@@ -18,7 +18,7 @@ class Login:
             password=self.password
         )
         response = request('POST', '/user/login', json=body)
-        utils.add('token', response.get('token'))
+        globals.add('token', response.get('token'))
         return response
 
 

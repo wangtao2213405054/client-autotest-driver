@@ -3,13 +3,14 @@
 
 # 启动 mitmproxy 相关服务
 
+import multiprocessing
 import platform
 import logging
 import os
 import re
 
 
-def start_mitmproxy_server(code_file, port, domain_list):
+class MitmproxyProcess(multiprocessing.Process):
     """
     启动一个 mitmproxy 服务
     windows: windows 文件不会进行过滤
@@ -18,19 +19,36 @@ def start_mitmproxy_server(code_file, port, domain_list):
     mac 中则需要安装 6.0.2 版本的 mitmproxy 7.x以上的版本无法过滤域名
     """
 
-    _order = f'mitmdump -p {port} -q -s {code_file}'
+    def __init__(self, code_file, port, domain_list, **kwargs):
+        """
+        初始化子进程
+        :param code_file: mitmdump 指定脚本文件路径
+        :param prot: mitmproxy 端口
+        :param domain_list: 监听的域名列表
+        :param kwargs: multiprocessing.Process 所需的参数
+        """
+        self.code_file = code_file
+        self.port = port
+        self.domain_list = domain_list
+        super(MitmproxyProcess, self).__init__(**kwargs)
 
-    if platform.system() == 'Darwin' or platform.system() == 'Linux':
+    def run(self) -> None:
+        """
+        重写 multiprocessing.Process 执行器
+        :return:
+        """
+        _order = f'mitmdump -p {self.port} -q -s {self.code_file}'
 
-        _re = map(lambda x: re.sub(r'', r'\.', x), domain_list)
-        _re = map(lambda x: f'(?!{x}:)', _re)
-        _domain = ''.join(_re)
-        _filter = rf" --ignore-hosts '^(?![0-9\.]+:){_domain}'"
-        _order += _filter
+        if platform.system() == 'Darwin' or platform.system() == 'Linux':
+            _re = map(lambda x: re.sub(r'', r'\.', x), self.domain_list)
+            _re = map(lambda x: f'(?!{x}:)', _re)
+            _domain = ''.join(_re)
+            _filter = rf" --ignore-hosts '^(?![0-9\.]+:){_domain}'"
+            _order += _filter
 
-    logging.debug(f'准备启动 mitmproxy 服务器, 端口: {port}')
-    logging.debug(f'启动命令: {_order}')
-    os.popen(_order)
+        logging.debug(f'准备启动 mitmproxy 服务器, 端口: {self.port}')
+        logging.debug(f'启动命令: {_order}')
+        os.system(_order)
 
 
 if __name__ == '__main__':
@@ -38,4 +56,3 @@ if __name__ == '__main__':
         'www.baidu.com',
         'mitmproxy.org'
     ]
-    start_mitmproxy_server(r'/test1.py', 8888, data_list)

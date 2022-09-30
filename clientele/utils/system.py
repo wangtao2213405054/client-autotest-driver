@@ -85,31 +85,84 @@ class GetSystemUtilities(threading.Thread):
         self.cpu = dict(
             count=psutil.cpu_count(),
             logical=psutil.cpu_count(logical=False),
-            percent=0.0
+            percent='0.00%'
         )
         self.abort = True
-        self.started = 0
+        self.started = ''
         self.interval = interval
+        self.network = None
+        self.virtual = None
+        self.disk = None
 
     def run(self) -> None:
+        self.get_started_time()
+
         while self.abort:
+            send, recv = self.get_network
+            time.sleep(self.interval)
             self.get_cpu_percent()
+            self.get_virtual_memory()
+            self.get_disk()
+            now_send, now_recv = self.get_network
+            self.network = dict(
+                send=f'{(now_send - send) / 1024:.4f} kb/s',
+                recv=f'{(now_recv - recv) / 1024:.4f} kb/s'
+            )
             self.reported()
 
     def get_cpu_percent(self) -> None:
         """ 获取 CPU 占用率"""
-        self.cpu['percent'] = psutil.cpu_percent(interval=self.interval)
+        self.cpu['percent'] = f'{psutil.cpu_percent():.2f}%'
 
     def get_started_time(self) -> None:
         """ 获取开机时间 """
-        self.started = int(psutil.users()[0].started)
+        self.started = time.strftime(
+            '%Y-%m-%d %H:%M:%S',
+            time.localtime(int(psutil.users()[0].started))
+        )
+
+    def get_virtual_memory(self) -> None:
+        byte = 1024 * 1024 * 1024
+        virtual = psutil.virtual_memory()
+        self.virtual = dict(
+            available=f'{virtual.available / byte:.2f}GB',
+            total=f'{virtual.total / byte:.2f}GB',
+            percent=f'{virtual.percent}%'
+        )
+
+    @property
+    def get_network(self) -> tuple[int, int]:
+        """ 获取网络信息 """
+        return psutil.net_io_counters().bytes_sent, psutil.net_io_counters().bytes_recv
+
+    def get_disk(self) -> None:
+        """ 获取磁盘信息 """
+        disk = psutil.disk_partitions()
+        total = 0
+        used = 0
+        free = 0
+        byte = 1024 * 1024 * 1024
+        for item in disk:
+            usage = psutil.disk_usage(item.mountpoint)
+            total += usage.total
+            used += usage.used
+            free += usage.free
+
+        self.disk = dict(
+            total=f'{total / byte:.2f}GB',
+            used=f'{used / byte:.2f}GB',
+            free=f'{free / byte:.2f}GB',
+            percent=f'{used / total:.2f}%'
+        )
 
     def stop(self) -> None:
         """
         停止线程
         :return:
         """
-        logging.debug('线程停止')
+        logging.debug('系统监控线程停止')
+        if not self.abort:
+            logging.debug('线程已停止... 请勿重复停止')
         self.abort = False
 
     def restart(self) -> None:
@@ -117,7 +170,9 @@ class GetSystemUtilities(threading.Thread):
         重新启动
         :return:
         """
-        logging.debug('线程重新启动')
+        logging.debug('系统监控线程重新启动')
+        if self.abort:
+            logging.debug('线程正在运行中... 请勿重新启动')
         self.abort = True
 
     def start(self) -> None:
@@ -125,7 +180,7 @@ class GetSystemUtilities(threading.Thread):
         开始线程
         :return:
         """
-        logging.debug('线程开始')
+        logging.debug('系统监控线程开始')
         super().start()
 
     def get_thread_status(self) -> bool:
@@ -143,22 +198,19 @@ class GetSystemUtilities(threading.Thread):
         """
         return dict(
             cpu=self.cpu,
-            startedTime=self.started
+            startedTime=self.started,
+            network=self.network,
+            virtual=self.virtual,
+            disk=self.disk
         )
 
     @abstractmethod
-    def reported(self): ...
+    def reported(self) -> None:
+        """
+        继承此类后重写此方法，用于将系统监控信息上传
+        :return:
+        """
 
 
 if __name__ == '__main__':
-    from clientele import utils
-    utils.logger(logging.DEBUG)
-    obj = GetSystemUtilities(daemon=True)
-    obj.start()
-    obj.get_started_time()
-
-    for items in range(20):
-        time.sleep(2)
-        if items == 5:
-            obj.stop()
-        print(obj.get)
+    kill_port(8081)
