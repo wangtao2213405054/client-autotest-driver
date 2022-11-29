@@ -4,7 +4,7 @@
 from .util import *
 from .code import CreateMockCode
 from .server import MitmproxyProcess
-from .alter import reset_value
+from .alter import reset
 from .main import MockHandler
 
 # 这是 mock http 接口的封装方法
@@ -24,6 +24,6 @@ __all__ = [
     'CreateMockCode',
     'url_to_class',
     'MitmproxyProcess',
-    'reset_value',
+    'reset',
     'MockHandler'
 ]

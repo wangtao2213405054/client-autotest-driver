@@ -7,7 +7,7 @@ import os
 same_path = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 
-def set_path(*args: str, name='storage') -> str:
+def set_path(*args: str, name='downloads') -> str:
     """
     创建数据存储路径, 于项目同级目录
     如果更改存储路径 请在提交代码时将文件夹添加至 .gitignore 文件中过滤日志相关文件

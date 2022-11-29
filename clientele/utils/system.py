@@ -27,9 +27,7 @@ def kill_port(port: int) -> None:
         for item in content_list:
             item = item.strip()
             if item.isdigit():
-                _order = f'kill -9 {item}'
-                logging.debug(f'关闭进程命令: {_order}')
-                os.popen(_order)
+                kill(item)
 
     elif _system == 'Windows':
         # 修复 windows 下运行 kill 方法会关闭主进程的 bug
@@ -38,9 +36,7 @@ def kill_port(port: int) -> None:
             item = item.strip()
             pid_list = re.findall(r'\d+$', item)
             if pid_list:
-                _order = f'taskkill -t -f /pid {pid_list[0]}'
-                logging.debug(f'关闭进程命令: {_order}')
-                os.popen(_order)
+                kill(pid_list[0])
                 break
 
     else:
@@ -48,6 +44,27 @@ def kill_port(port: int) -> None:
         return
 
     logging.debug(f'已关闭 {port} 端口进程')
+
+
+def kill(pid):
+    """
+    通过进程id关闭进程
+    :param pid: 进程id
+    :return:
+    """
+    _system = platform.system()
+    if _system == 'Darwin' or _system == 'Linux':
+        _order = f'kill -9 {pid}'
+
+    elif _system == 'Windows':
+        _order = f'taskkill -t -f /pid {pid}'
+
+    else:
+        warnings.warn('暂不支持的系统类型')
+        return
+
+    logging.debug(f'关闭进程命令: {_order}')
+    os.popen(_order)
 
 
 def usage_port(ip: str, port: int) -> bool:

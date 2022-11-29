@@ -6,7 +6,7 @@ from .path import *
 from .logger import *
 from .message import Email, DingTalk
 from clientele.globals import add, delete, clear, get
-from .system import kill_port, usage_port, get_host, GetSystemUtilities
+from .system import kill_port, usage_port, get_host, GetSystemUtilities, kill
 
 
 __all__ = [
@@ -19,5 +19,6 @@ __all__ = [
     'kill_port',
     'usage_port',
     'get_host',
-    'GetSystemUtilities'
+    'GetSystemUtilities',
+    'kill'
 ]

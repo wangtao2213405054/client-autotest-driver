@@ -10,7 +10,7 @@ import json
 import os
 
 
-def reset_value(url, value, coord: list[str]):
+def reset(url, value, coord: list[str]):
     """
     重新设置 json 中对应坐标的 value
     :param url: 接口 url
@@ -64,4 +64,4 @@ if __name__ == '__main__':
     data_list = ["data", 'serviceStats', 0, 'title']
     data1_list = ['message']
     _url = '/api/v1/client/mock/test'
-    print(reset_value(_url, '哈哈哈333', data_list))
+    print(reset(_url, '哈哈哈333', data_list))
