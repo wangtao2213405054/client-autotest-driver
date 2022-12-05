@@ -3,14 +3,12 @@
 
 from clientele import sio, utils, create_app, Actuator, api
 import socketio.exceptions
-import multiprocessing
-import threading
 
 import time
 
 
-token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJDb2tlIiwidXNlcl9pZCI6MSwiZGV2aWNlIjoid2luZG93czEw' \
-        'IiwiZXhwIjpudWxsfQ.BH_r1vpAN7_gnz0cSHsKxPlrbpKz2NjihI7KeBUASpw'
+token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJNYWMiLCJ1c2VyX2lkIjoiZTMxMTA5YWE2ZWZhMTFlZDhhY' \
+        'jQ3MGNkMGQzMmViMzEiLCJleHAiOm51bGx9.wYm_yHVYBEMbqnCaWg_RJg38ltjqgQbZUKDA8x_z1To'
 
 # 这是假设从服务器获取的设备信息
 _devices = [
@@ -23,6 +21,20 @@ _process = {}
 
 # 创建 socket 服务
 create_app(token)
+
+
+class ReGetSystemUtilities(utils.GetSystemUtilities):
+
+    def reported(self) -> None:
+        try:
+            print(self.get)
+            sio.emit('system', data=self.get)
+        except socketio.exceptions.BadNamespaceError:
+            pass
+
+
+_system = ReGetSystemUtilities()
+_system.start()
 
 
 def main():

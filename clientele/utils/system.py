@@ -92,7 +92,7 @@ def get_host() -> str:
 class GetSystemUtilities(threading.Thread):
     """ 获取当前设备的基本信息 """
 
-    def __init__(self, interval=2, **kwargs):
+    def __init__(self, interval=1, **kwargs):
         """
         重写 threading.Thread 类
         :param interval: 线程间隔时间
@@ -102,7 +102,7 @@ class GetSystemUtilities(threading.Thread):
         self.cpu = dict(
             count=psutil.cpu_count(),
             logical=psutil.cpu_count(logical=False),
-            percent='0.00%'
+            percent=0.00
         )
         self.abort = True
         self.started = ''
@@ -122,14 +122,14 @@ class GetSystemUtilities(threading.Thread):
             self.get_disk()
             now_send, now_recv = self.get_network
             self.network = dict(
-                send=f'{(now_send - send) / 1024:.4f} kb/s',
-                recv=f'{(now_recv - recv) / 1024:.4f} kb/s'
+                send=round((now_send - send) / 1024, 2),
+                recv=round((now_recv - recv) / 1024, 2)
             )
             self.reported()
 
     def get_cpu_percent(self) -> None:
         """ 获取 CPU 占用率"""
-        self.cpu['percent'] = f'{psutil.cpu_percent():.2f}%'
+        self.cpu['percent'] = psutil.cpu_percent()
 
     def get_started_time(self) -> None:
         """ 获取开机时间 """
@@ -144,7 +144,7 @@ class GetSystemUtilities(threading.Thread):
         self.virtual = dict(
             available=f'{virtual.available / byte:.2f}GB',
             total=f'{virtual.total / byte:.2f}GB',
-            percent=f'{virtual.percent}%'
+            percent=virtual.percent
         )
 
     @property
@@ -169,7 +169,7 @@ class GetSystemUtilities(threading.Thread):
             total=f'{total / byte:.2f}GB',
             used=f'{used / byte:.2f}GB',
             free=f'{free / byte:.2f}GB',
-            percent=f'{used / total:.2f}%'
+            percent=round(used / total, 2)
         )
 
     def stop(self) -> None:
@@ -218,7 +218,8 @@ class GetSystemUtilities(threading.Thread):
             startedTime=self.started,
             network=self.network,
             virtual=self.virtual,
-            disk=self.disk
+            disk=self.disk,
+            currentTime=time.strftime('%H:%M:%S')
         )
 
     @abstractmethod
