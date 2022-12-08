@@ -7,7 +7,7 @@ from clientele import globals
 
 import socketio
 
-socket = socketio.Client()
+socket = socketio.Client(reconnection_delay=5)
 
 
 def create_app(token):
