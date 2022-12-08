@@ -9,18 +9,4 @@ from .mock import *
 from .tester import *
 from .utils import *
 from .actuator import Actuator
-
-import socketio
-
-sio = socketio.Client()
-
-
-def create_app(token):
-    """
-    创建 socket 链接
-    :param token: 连接服务器的设备 Token
-    :return:
-    """
-    globals.add('token', token)
-    _class = env_map.get(globals.get('environment'))
-    sio.connect(_class.DOMAIN, {'token': globals.get('token')})
+from clientele.sockets import devices, task

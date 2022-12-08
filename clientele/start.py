@@ -1,14 +1,15 @@
 # _author: Coke
 # _date: 2022/11/21 11:03
 
-from clientele import sio, utils, create_app, Actuator, api
-import socketio.exceptions
+from clientele import utils, Actuator, api
+from clientele.sockets import socket, create_app
 
+import socketio.exceptions
 import time
 
 
-token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJNYWMiLCJ1c2VyX2lkIjoiZTMxMTA5YWE2ZWZhMTFlZDhhY' \
-        'jQ3MGNkMGQzMmViMzEiLCJleHAiOm51bGx9.wYm_yHVYBEMbqnCaWg_RJg38ltjqgQbZUKDA8x_z1To'
+token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJXaW5kb3dzIiwidXNlcl9pZCI6IjE5ZjVkNzY4NzZkZDE' \
+        'xZWRhMDdiNzBjZDBkMzJlYjMxIiwiZXhwIjpudWxsfQ.e4-Za4wLktQMfbrxQcB2cV0vj6pH2BNLNqtQuAFUMxg'
 
 # 这是假设从服务器获取的设备信息
 _devices = [
@@ -19,22 +20,14 @@ _devices = [
 # 进程存储器
 _process = {}
 
-# 创建 socket 服务
-create_app(token)
-
 
 class ReGetSystemUtilities(utils.GetSystemUtilities):
 
     def reported(self) -> None:
         try:
-            print(self.get)
-            sio.emit('system', data=self.get)
+            socket.emit('system', data=self.get)
         except socketio.exceptions.BadNamespaceError:
             pass
-
-
-_system = ReGetSystemUtilities()
-_system.start()
 
 
 def main():
@@ -65,4 +58,10 @@ def main():
 
 
 if __name__ == '__main__':
+    # 创建 socket 服务
+    create_app(token)
+    # 获取电脑硬件信息
+    _system = ReGetSystemUtilities()
+    _system.start()
+    # 执行任务函数
     main()
