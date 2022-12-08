@@ -164,6 +164,8 @@ class GetSystemUtilities(threading.Thread):
             total += usage.total
             used += usage.used
             free += usage.free
+            if platform.system() != 'Windows':
+                break
 
         self.disk = dict(
             total=f'{total / byte:.2f}GB',
