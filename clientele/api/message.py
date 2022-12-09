@@ -3,8 +3,6 @@
 
 from clientele.api.request import request
 
-from clientele import api
-
 
 class Message:
     """ 获取服务器通知配置信息 """
@@ -74,10 +72,3 @@ class Message:
             robot_list.append(item_dict)
 
         return response.get('status'), robot_list
-
-
-if __name__ == '__main__':
-    _login = api.Login('coke@qq.com', '123456')
-    _login.token()
-    _msg = Message(1)
-    print(_msg.get_lark)

@@ -8,5 +8,4 @@ from .drivers import *
 from .mock import *
 from .tester import *
 from .utils import *
-from .actuator import Actuator
 from clientele.sockets import devices, task

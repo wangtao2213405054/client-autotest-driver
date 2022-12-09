@@ -10,12 +10,11 @@ import socketio
 socket = socketio.Client(reconnection_delay=5)
 
 
-def create_app(token):
+def create_app():
     """
     创建 socket 链接
-    :param token: 连接服务器的设备 Token
     :return:
     """
-    globals.add('token', token)
+
     _class = env_map.get(globals.get('environment'))
     socket.connect(_class.DOMAIN, {'token': globals.get('token')})

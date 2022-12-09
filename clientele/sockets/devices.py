@@ -2,21 +2,30 @@
 # _date: 2022/12/8 14:59
 
 from clientele.sockets import socket
-from clientele import utils
+from clientele import utils, globals
 
 import os
 
 
 @socket.on('workerTaskSwitch')
 def edit_worker_switch(data):
-    """ 获取任务机可执行状态 """
-    print(data, 'workerTaskSwitch')
+    """ 修改任务机可执行状态 """
+
+    worker = globals.get('worker')
+    for item in worker:
+        if item.get('id') == data.get('workerId'):
+            item['switch'] = data.get('switch')
+
+    globals.add('worker', worker)
 
 
 @socket.on('masterTaskSwitch')
 def edit_master_switch(data):
     """ 获取当前控制机的执行状态 """
-    print(data, 'masterTaskSwitch')
+
+    master = globals.get('master')
+    master['status'] = data.get('switch')
+    globals.add('master', master)
 
 
 @socket.on('masterDeviceDelete')
@@ -31,18 +40,30 @@ def delete_master_info():
 def delete_worker_info(data):
     """ 执行设备被删除时的钩子 """
 
-    print(data, 'workerDeviceDelete')
+    worker = globals.get('worker')
+    for index, item in enumerate(worker):
+        if item.get('id') == data.get('id'):
+            del worker[index]
+
+    globals.add('worker', worker)
 
 
 @socket.on('masterDeviceEdit')
 def edit_master_info(data):
     """ 控制设备信息更新时调用 """
 
-    print(data, 'masterDeviceEdit')
+    globals.add('master', data)
 
 
 @socket.on('workerDeviceEdit')
 def edit_worker_info(data):
     """ 执行设备信息更新时调用 """
 
-    print(data, 'workerDeviceEdit')
+    worker = globals.get('worker')
+    for index, item in enumerate(worker):
+        if item.get('id') == data.get('id'):
+            worker[index] = data
+    else:
+        worker.append(data)
+
+    globals.add('worker', worker)
