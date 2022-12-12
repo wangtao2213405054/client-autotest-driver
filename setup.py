@@ -18,7 +18,7 @@ setup(
         'selenium',
         'imageio',
         'psutil',
-        'socketio',
+        'python-socketio',
         'websocket-client'
     ]
 )

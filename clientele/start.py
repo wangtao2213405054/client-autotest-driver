@@ -11,8 +11,8 @@ import logging
 import time
 
 
-tokens = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJXaW5kb3dzIiwidXNlcl9pZCI6IjE5ZjVkNzY4NzZkZDE' \
-        'xZWRhMDdiNzBjZDBkMzJlYjMxIiwiZXhwIjpudWxsfQ.e4-Za4wLktQMfbrxQcB2cV0vj6pH2BNLNqtQuAFUMxg'
+tokens = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJXaW5kb3dzIiwidXNlcl9pZCI6IjY4NWM4NWYwNzlmOTExZ' \
+         'WQ5ZTVmNzBjZDBkMzJlYjMxIiwiZXhwIjpudWxsfQ.KelguPWcxhOtA3EJEVGwyTbdExNNCzfHvjv4mAF5Lfk'
 
 
 class ReGetSystemUtilities(utils.GetSystemUtilities):
