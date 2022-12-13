@@ -112,17 +112,16 @@ class Starter:
             _task_list = _task.get('task')
 
             for _task_item in _task_list:
-                for _id in free_worker:
-                    if _id == _task_item.get('power'):
-                        _device = self.get_worker_info(_id)
-                        logging.info(f'已经将任务分发给 {_device.get("name")} 设备')
-                        _actuator = multiprocessing.Process(
-                            target=workers,
-                            args=(_device.get("name"), _id, self.token)
-                        )
-                        worker_process[_id] = _actuator
-                        _actuator.start()
-                        break
+                _id = _task_item.get('power')
+                if _id in free_worker:
+                    _device = self.get_worker_info(_id)
+                    logging.info(f'已经将任务分发给 {_device.get("name")} 设备')
+                    _actuator = multiprocessing.Process(
+                        target=workers,
+                        args=(_device.get("name"), _id, self.token)
+                    )
+                    worker_process[_id] = _actuator
+                    _actuator.start()
 
     def _worker_status(self):
         """ 查询当前执行机的进程状态并更新数据 """
