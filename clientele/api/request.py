@@ -6,6 +6,7 @@ from clientele import globals, exceptions
 from typing import Union, Dict, List
 
 import requests
+import traceback
 import logging
 
 
@@ -27,9 +28,6 @@ def request(method: str, uri: str, **kwargs) -> Union[Dict, List, str, int, None
 
     try:
         response = requests.request(method, url, headers=header, **kwargs)
-    except _error:
-        pass
-    else:
         if response.status_code != 200:
             _message = f'服务器内部错误, 状态码: {response.status_code}'
             logging.error(_message)
@@ -42,3 +40,5 @@ def request(method: str, uri: str, **kwargs) -> Union[Dict, List, str, int, None
             raise exceptions.ServerError(_message)
 
         return body.get('data')
+    except _error:
+        logging.debug(traceback.format_exc())

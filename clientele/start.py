@@ -11,8 +11,8 @@ import logging
 import time
 
 
-tokens = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJXaW5kb3dzIiwidXNlcl9pZCI6IjY4NWM4NWYwNzlmOTExZ' \
-         'WQ5ZTVmNzBjZDBkMzJlYjMxIiwiZXhwIjpudWxsfQ.KelguPWcxhOtA3EJEVGwyTbdExNNCzfHvjv4mAF5Lfk'
+tokens = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJNYWMiLCJ1c2VyX2lkIjoiMjNhYTAxZmM3NTcwMTFlZGEw' \
+         'Y2NhY2RlNDgwMDExMjIiLCJleHAiOm51bGx9.fwGthKxylw_-m3sfScBeNXeVZDj7t9R6ELnQRGB26GY'
 
 
 class ReGetSystemUtilities(utils.GetSystemUtilities):
@@ -63,12 +63,12 @@ class Starter:
     @staticmethod
     def get_task(body):
         """ 获取一个任务 """
-        try:
-            task = api.request('GET', '/task/master/get', json=body)
-        except Exception as e:
-            logging.error(e)
-        else:
-            return task
+        return api.request('GET', '/task/master/get', json=body, exceptions=Exception)
+
+    @staticmethod
+    def recall(_id):
+        """ 回溯任务状态 """
+        return api.request('POST', '/task/master/sign', json={'id': _id}, exceptions=Exception)
 
     @property
     def get_free_worker(self):
@@ -91,6 +91,7 @@ class Starter:
 
     def run(self, interval=1):
         """ 启动运行程序 """
+
         while True:
 
             time.sleep(interval)
@@ -99,7 +100,7 @@ class Starter:
 
             # 查询是否进入任务轮训, 开关为 False 时跳过本次循环, 无空闲任务时终止轮训
             if not self.get_master['status'] or not globals.get('freeTask'):
-                logging.info(f'当前控制机状态: {self.get_master["status"]}, 是否存在任务: {globals.get("freeTask")}')
+                logging.debug(f'当前控制机状态: {self.get_master["status"]}, 是否存在任务: {globals.get("freeTask")}')
                 continue
 
             # 查询空闲设备
@@ -108,13 +109,19 @@ class Starter:
                 continue
 
             _task = self.get_task({'free': free_worker})
+
+            if not _task:
+                logging.error('任务获取失败, 请检查失败原因')
+                continue
+
             globals.add('freeTask', _task.get('free'))
             _task_list = _task.get('task')
 
             for _task_item in _task_list:
                 _id = _task_item.get('power')
-                if _id in free_worker:
-                    _device = self.get_worker_info(_id)
+                _device = self.get_worker_info(_id)
+                # 如果id在空闲设备列表并且此设备开关状态正常、进程正常，然后将任务分发
+                if _id in free_worker and _device.get('switch') and not worker_process.get(_id):
                     logging.info(f'已经将任务分发给 {_device.get("name")} 设备')
                     _actuator = multiprocessing.Process(
                         target=workers,
@@ -122,6 +129,9 @@ class Starter:
                     )
                     worker_process[_id] = _actuator
                     _actuator.start()
+                else:
+                    # 通知服务器, 此任务未分配，数据回滚
+                    self.recall(_task_item.get('id'))
 
     def _worker_status(self):
         """ 查询当前执行机的进程状态并更新数据 """

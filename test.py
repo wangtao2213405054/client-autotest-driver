@@ -1,5 +1,11 @@
 
 
-data = {'1': 'test'}
+import sys
+import unittest
+import traceback
 
-print('1' in data)
+
+try:
+    raise IOError('test')
+except Exception:
+    print(traceback.format_exc())
