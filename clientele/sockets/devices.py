@@ -17,6 +17,7 @@ def edit_worker_switch(data):
             item['switch'] = data.get('switch')
 
     globals.add('worker', worker)
+    globals.add('freeTask', True)
 
 
 @socket.on('masterTaskSwitch')
@@ -26,6 +27,7 @@ def edit_master_switch(data):
     master = globals.get('master')
     master['status'] = data.get('switch')
     globals.add('master', master)
+    globals.add('freeTask', True)
 
 
 @socket.on('masterDeviceDelete')
@@ -53,6 +55,7 @@ def edit_master_info(data):
     """ 控制设备信息更新时调用 """
 
     globals.add('master', data)
+    globals.add('freeTask', True)
 
 
 @socket.on('workerDeviceEdit')
@@ -67,3 +70,4 @@ def edit_worker_info(data):
         worker.append(data)
 
     globals.add('worker', worker)
+    globals.add('freeTask', True)
