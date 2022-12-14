@@ -11,8 +11,8 @@ import logging
 import time
 
 
-tokens = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJNYWMiLCJ1c2VyX2lkIjoiMjNhYTAxZmM3NTcwMTFlZGEw' \
-         'Y2NhY2RlNDgwMDExMjIiLCJleHAiOm51bGx9.fwGthKxylw_-m3sfScBeNXeVZDj7t9R6ELnQRGB26GY'
+tokens = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJXaW5vZHdzIiwidXNlcl9pZCI6ImVjYzM5ODhkN2I3N' \
+         'TExZWRhMTA4NzBjZDBkMzJlYjMxIiwiZXhwIjpudWxsfQ.tyLzZFQXHHDzIWESIeztnYMTiSPHDnF9JhnVt-MKmqI'
 
 
 class ReGetSystemUtilities(utils.GetSystemUtilities):
@@ -125,7 +125,7 @@ class Starter:
                     logging.info(f'已经将任务分发给 {_device.get("name")} 设备')
                     _actuator = multiprocessing.Process(
                         target=workers,
-                        args=(_device.get("name"), _id, self.token)
+                        args=(_device.get("name"), _id, _task_item.get('id'), self.token)
                     )
                     worker_process[_id] = _actuator
                     _actuator.start()
