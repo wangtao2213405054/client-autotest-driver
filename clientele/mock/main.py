@@ -50,7 +50,6 @@ class MockHandler:
         mock data
         """
         _domain = [
-            'www.baidu.com',
             'mitmproxy.org',
             'python.org',
             'github.org'
@@ -72,3 +71,5 @@ class MockHandler:
 
 if __name__ == '__main__':
     MockHandler(8888)
+    import time
+    time.sleep(1000)

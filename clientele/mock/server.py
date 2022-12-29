@@ -39,8 +39,8 @@ class MitmproxyProcess(multiprocessing.Process):
         """
         _order = f'mitmdump -p {self.port} -q -s {self.code_file}'
 
-        if platform.system() == 'Darwin' or platform.system() == 'Linux':
-            _re = map(lambda x: re.sub(r'', r'\.', x), self.domain_list)
+        if platform.system() == 'Darwin':
+            _re = map(lambda x: re.sub(r'\.', r'\.', x), self.domain_list)
             _re = map(lambda x: f'(?!{x}:)', _re)
             _domain = ''.join(_re)
             _filter = rf" --ignore-hosts '^(?![0-9\.]+:){_domain}'"
