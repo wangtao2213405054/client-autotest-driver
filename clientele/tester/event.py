@@ -12,7 +12,7 @@ class CaseEvent(drivers.Driver):
     方便 getattr 调用
     """
 
-    def __init__(self, driver, wait):
+    def __init__(self, driver, wait=5):
         super().__init__(driver, wait)
 
     @staticmethod

@@ -4,6 +4,7 @@
 from .message import Message
 from .request import request
 from .devices import *
+from .case import *
 
 
 __all__ = [

@@ -23,7 +23,10 @@ class Driver(drivers.Selenium, drivers.Appium):
         """
         super().__init__(driver)
 
-        driver.implicitly_wait(element_wait)
+        try:
+            driver.implicitly_wait(element_wait)
+        except AttributeError:
+            pass
         self.driver = driver
 
     def find_elements(self, by: str, value: str, name: str = None) -> list[WebElement]:
@@ -77,7 +80,7 @@ class Driver(drivers.Selenium, drivers.Appium):
 
         return elements[index].clear()
 
-    def find_elements_send_keys(self, by: str, value: str, content: str, index: str = 0, name: str = None) -> None:
+    def find_elements_send_keys(self, by: str, value: str, content: str, index: int = 0, name: str = None) -> None:
         """
         在文本框中进行输入
         :param by: 元素类型
@@ -206,6 +209,16 @@ class Driver(drivers.Selenium, drivers.Appium):
             utils.compress(file_path, 150)
 
         return file_path
+
+    def globals_screenshots(self):
+        """ 将截图添加至内存变量 """
+        path = self.screenshots()
+        container = utils.globals.get('caseStepsImages')
+        if not isinstance(container, list):
+            container = []
+
+        container.append(path)
+        utils.globals.add('caseStepsImages', container)
 
     def find_elements_screenshots(
             self,

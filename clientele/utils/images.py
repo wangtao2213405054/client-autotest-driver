@@ -85,7 +85,7 @@ def gif(paths: list[str], infile: str, duration: int = 1.5) -> str:
     """
     将图片转换为 gif 动图
     :param paths: 要转换图片的列表
-    :param infile: gif 图片的保存路径
+    :param infile: gif 图片的保存路径 .gif 结束
     :param duration: 图片切换的间隔
     :return:
     """
@@ -96,3 +96,7 @@ def gif(paths: list[str], infile: str, duration: int = 1.5) -> str:
     logging.debug(f'已将 {len(paths)} 张图片改变为动图')
 
     return infile
+
+
+if __name__ == '__main__':
+    gif([], r'D:\PycharmProject\client-autotest-driver\downloads\client\iPhone\test.gif')
