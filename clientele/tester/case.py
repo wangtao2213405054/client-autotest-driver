@@ -1,7 +1,7 @@
 # _author: Coke
 # _date: 2022/7/20 10:37
 
-from clientele import api, utils, globals, tester
+from clientele import api, utils, tester
 from io import StringIO
 
 import traceback
@@ -128,19 +128,12 @@ class TestCase(tester.CaseEvent):
             self.errorDetails = traceback.format_exc()
             self.errorInfo = str(e)
             self.status = 0
-            self.fail_screenshots()
+            self.screenshots()
         else:
             self.status = 1
 
         self.after()
         return self.result
-
-    def fail_screenshots(self):
-        """ 失败后进行截图 """
-        try:
-            self.imagePaths = self.screenshots()
-        except Exception as e:
-            logging.debug(e)
 
     def before(self, case_info):
         """ 在测试用例之前执行此方法 """
@@ -150,7 +143,6 @@ class TestCase(tester.CaseEvent):
         self.module = ' / '.join(case_info.get('moduleNameList'))
         self.priority = f'P{case_info.get("priority")}'
         self.setList = case_info.get('setNameInfo')
-        globals.add('caseStepsImages', [])
 
         # 将日志写入内存
         ch = logging.StreamHandler(self.output)
@@ -158,8 +150,6 @@ class TestCase(tester.CaseEvent):
 
     def after(self):
         """ 在测试用例结束后执行此方法 """
-
-        self.imagePaths += globals.get('caseStepsImages')
 
         self.stopTime = time.time()
         self.duration = round(self.stopTime - self.startTime, 3)

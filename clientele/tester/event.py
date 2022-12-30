@@ -13,6 +13,7 @@ class CaseEvent(drivers.Driver):
     """
 
     def __init__(self, driver, wait=5):
+        self.imagePaths = []
         super().__init__(driver, wait)
 
     @staticmethod
@@ -26,3 +27,17 @@ class CaseEvent(drivers.Driver):
         time.sleep(timer)
 
     def attribute(self, **kwargs): ...
+
+    def screenshots(self, file_path: str = None, is_compression: bool = True) -> str:
+        """
+        重写 screenshots 方法
+        :param file_path:
+        :param is_compression:
+        :return:
+        """
+        try:
+            path = super().screenshots(file_path, is_compression)
+            self.imagePaths.append(path)
+            return path
+        except Exception as e:
+            logging.debug(e)

@@ -210,16 +210,6 @@ class Driver(drivers.Selenium, drivers.Appium):
 
         return file_path
 
-    def globals_screenshots(self):
-        """ 将截图添加至内存变量 """
-        path = self.screenshots()
-        container = utils.globals.get('caseStepsImages')
-        if not isinstance(container, list):
-            container = []
-
-        container.append(path)
-        utils.globals.add('caseStepsImages', container)
-
     def find_elements_screenshots(
             self,
             by: str,
