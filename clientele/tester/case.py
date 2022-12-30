@@ -1,7 +1,7 @@
 # _author: Coke
 # _date: 2022/7/20 10:37
 
-from clientele import api, tester, utils, globals
+from clientele import api, utils, globals, tester
 from io import StringIO
 
 import traceback
@@ -10,17 +10,15 @@ import logging
 import time
 
 
-class TestCase:
+class TestCase(tester.CaseEvent):
     """ 用例组装器 """
 
-    def __init__(self, driver):
+    def __init__(self, driver, wait=5):
         """
         初始化函数, 需要一个用例事件的绑定对象
         :param driver: 本次启动的 driver
         """
-        self.driver = driver
-        self.event = None
-
+        super().__init__(driver, wait)
         # 基础信息
         self.id = None  # 用例ID
         self.name = None  # 用例名称
@@ -81,10 +79,10 @@ class TestCase:
         """
 
         try:
-            _attr = getattr(self.event, step.get('mapping'))
+            _attr = getattr(self, step.get('mapping'))
         except AttributeError:
             logging.warning(f'没有找到 {step.get("name")} 事件对应的函数映射, 请检查步骤事件配置是否正确')
-            _attr = getattr(self.event, 'attribute')
+            _attr = getattr(self, 'attribute')
 
         return _attr
 
@@ -140,7 +138,7 @@ class TestCase:
     def fail_screenshots(self):
         """ 失败后进行截图 """
         try:
-            self.imagePaths = self.event.screenshots()
+            self.imagePaths = self.screenshots()
         except Exception as e:
             logging.debug(e)
 
@@ -153,8 +151,6 @@ class TestCase:
         self.priority = f'P{case_info.get("priority")}'
         self.setList = case_info.get('setNameInfo')
         globals.add('caseStepsImages', [])
-
-        self.event = tester.CaseEvent(self.driver)
 
         # 将日志写入内存
         ch = logging.StreamHandler(self.output)
