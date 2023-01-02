@@ -11,15 +11,15 @@ import logging
 import time
 
 
-tokens = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJXaW5vZHdzIiwidXNlcl9pZCI6ImVjYzM5ODhkN2I3N' \
-         'TExZWRhMTA4NzBjZDBkMzJlYjMxIiwiZXhwIjpudWxsfQ.tyLzZFQXHHDzIWESIeztnYMTiSPHDnF9JhnVt-MKmqI'
+tokens = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJNYWMiLCJ1c2VyX2lkIjoiNzA3ZGZiYmU4NDU3MTFlZGE1MmJhY2' \
+         'RlNDgwMDExMjIiLCJleHAiOm51bGx9.QQoFO6TUQpWJ-S4cTTWG_cBBfjdgBFgooxKiqEDXwks'
 
 
 class ReGetSystemUtilities(utils.GetSystemUtilities):
 
     def reported(self) -> None:
         try:
-            socket.emit('system', data=self.get)
+            socket.emit('system',  data=self.get)
         except socketio.exceptions.BadNamespaceError:
             pass
 

@@ -1,7 +1,7 @@
 # _author: Coke
 # _date: 2022/8/1 10:18
 
-from clientele import drivers
+from clientele import drivers, api
 import logging
 import time
 
@@ -14,6 +14,7 @@ class CaseEvent(drivers.Driver):
 
     def __init__(self, driver, wait=5):
         self.imagePaths = []
+        self.images = []
         super().__init__(driver, wait)
 
     @staticmethod
@@ -28,16 +29,20 @@ class CaseEvent(drivers.Driver):
 
     def attribute(self, **kwargs): ...
 
-    def screenshots(self, file_path: str = None, is_compression: bool = True) -> str:
+    def url_screenshots(self):
+        """ 继承 screenshots 方法后将图片上传至云端并返回 url 链接 """
+        path = self.screenshots()
+        url = api.upload_file(path).get('url')
+        self.images.append(url)
+        return url
+
+    def save_screenshots(self, file_path: str = None, is_compression: bool = True) -> str:
         """
-        重写 screenshots 方法
+        重写 screenshots 方法, 并将图片地址存放在 imagePaths 中
         :param file_path:
         :param is_compression:
         :return:
         """
-        try:
-            path = super().screenshots(file_path, is_compression)
-            self.imagePaths.append(path)
-            return path
-        except Exception as e:
-            logging.debug(e)
+        path = self.screenshots(file_path, is_compression)
+        self.imagePaths.append(path)
+        return path

@@ -1,13 +1,14 @@
 # _author: Coke
 # _date: 2022/7/20 10:37
 
-from clientele import api, utils, tester
+from clientele import api, utils, tester, drivers
 from io import StringIO
 
 import traceback
 import logging.config
 import logging
 import time
+import os
 
 
 class TestCase(tester.CaseEvent):
@@ -86,11 +87,10 @@ class TestCase(tester.CaseEvent):
 
         return _attr
 
-    def run(self, case: dict, interval=0.1):
+    def run(self, case: dict):
         """
         执行测试用例
         :param case: 要执行的用例信息
-        :param interval: 执行步骤的间隔
         :return:
         """
         _steps = case.get('caseSteps', [])
@@ -100,25 +100,36 @@ class TestCase(tester.CaseEvent):
         # 递归调用 执行前置用例
         if _pre:
             _case = api.get_case_info(_pre)
-            self.run(_case, interval)
+            self.run(_case)
 
-        # 执行测试用例
-        for index, item in enumerate(_steps):
-            try:
-                mapping = self.assemble(item)
-                mapping(**item.get('params'))
-                time.sleep(interval)
-            except Exception as error:
-                self.errorStep = f'在执行 {case.get("name")} 用例过程中的第 {index + 1} 个步骤: {item.get("name")} 时失败了'
-                raise error
+        self.case(_steps)
 
         # 递归调用，执行后置用例
         if _post:
             _case = api.get_case_info(_post)
-            self.run(_case, interval)
+            self.run(_case)
 
-    def start(self, _id):
+    def case(self, steps: dict) -> None:
+        """ 执行测试用例步骤 """
+        for index, item in enumerate(steps):
+            try:
+                mapping = self.assemble(item)
+                mapping(**item.get('params'))
+
+                # 如果事件需要截图则进行截图
+                if item.get('screenshot'):
+                    self.save_screenshots()
+
+            except Exception as error:
+                self.errorStep = f'在执行 {steps.get("name")} 用例过程中的第 {index + 1} 个步骤: {item.get("name")} 时失败了'
+                raise error
+
+    def start(self, **kwargs):
         """ 调用此方法开始执行测试用例 """
+        _id = kwargs.pop('id')
+        if _id is None:
+            return self.result
+
         case_info = api.get_case_info(_id)
         self.before(case_info)
 
@@ -128,12 +139,19 @@ class TestCase(tester.CaseEvent):
             self.errorDetails = traceback.format_exc()
             self.errorInfo = str(e)
             self.status = 0
-            self.screenshots()
+            self.fail_screenshots()
         else:
             self.status = 1
 
         self.after()
         return self.result
+
+    def fail_screenshots(self):
+        """ 用例失败后进行截图 """
+        try:
+            self.url_screenshots()
+        except Exception as e:
+            logging.debug(e)
 
     def before(self, case_info):
         """ 在测试用例之前执行此方法 """
@@ -154,9 +172,23 @@ class TestCase(tester.CaseEvent):
         self.stopTime = time.time()
         self.duration = round(self.stopTime - self.startTime, 3)
 
+        # 测试结束后将生成的 GIF 图片上传至云端
+        folder_path = utils.set_path('screenshots')
+        file_path = os.path.join(folder_path, f"{time.strftime('%Y-%m-%d_%H_%M_%S')}.gif")
+        self.gif = api.upload_file(utils.gif(self.imagePaths, file_path)).get('url')
+
+        # 关闭应用进程
+        self.quit()
+
 
 if __name__ == '__main__':
+    conf = dict(
+        browser='Chrome',
+        mockReset=False,
+        url='http://localhost:9527/'
+    )
     utils.logger(utils.INFO)
-    test = TestCase('test')
-    _result = test.start(1000000)
+    obj = drivers.DriverStarter(**conf)
+    test = TestCase(obj.selenium_starter)
+    _result = test.start(id=1000000)
     print(_result)

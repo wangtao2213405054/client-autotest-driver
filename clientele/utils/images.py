@@ -3,6 +3,7 @@
 
 from PIL import Image
 import imageio.v2 as imageio
+from typing import Union
 
 import logging
 import os
@@ -81,7 +82,7 @@ def cut(infile, area: tuple, aspect: tuple[int, int]) -> str:
     return infile
 
 
-def gif(paths: list[str], infile: str, duration: int = 1.5) -> str:
+def gif(paths: list[str], infile: str, duration: int = 1.5) -> Union[str, None]:
     """
     将图片转换为 gif 动图
     :param paths: 要转换图片的列表
@@ -89,6 +90,9 @@ def gif(paths: list[str], infile: str, duration: int = 1.5) -> str:
     :param duration: 图片切换的间隔
     :return:
     """
+
+    if not paths:
+        return
 
     frames = list(map(lambda x: imageio.imread(x), paths))
     imageio.mimsave(infile, frames, 'GIF', duration=duration)

@@ -4,8 +4,8 @@
 # 驱动器
 # 封装了 appium、selenium 相关的 api
 
-from .appium import Appium
-from .selenium import Selenium
+from ._appium import Appium
+from ._selenium import Selenium
 from .driver import Driver
 from .server import AppiumProcess, WebdriverProcess
 from .starter import DriverStarter

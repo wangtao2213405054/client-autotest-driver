@@ -200,13 +200,13 @@ class Driver(drivers.Selenium, drivers.Appium):
         """
         if not file_path:
             folder_path = utils.set_path('screenshots')
-            file_path = os.path.join(folder_path, time.strftime('%Y-%m-%d_%H_%M_%S'))
+            file_path = os.path.join(folder_path, f"{time.strftime('%Y-%m-%d_%H_%M_%S')}.png")
 
         self.driver.get_screenshot_as_file(file_path)
 
         if is_compression:
-            utils.measure(file_path, 0.3)
-            utils.compress(file_path, 150)
+            utils.measure(file_path, 0.7)
+            utils.compress(file_path, 800)
 
         return file_path
 
