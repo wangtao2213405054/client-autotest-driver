@@ -7,13 +7,14 @@ import time
 import random
 
 
-def workers(name, worker_id, task_id, token):
+def workers(name, worker_id, task_id, token, kwargs):
+    print(kwargs)
     globals.add('token', token)
 
-    run_count = random.randint(10, 50)
+    run_count = random.randint(5, 10)
     print(f'开始 {name} 测试')
 
-    api.request('POST', '/task/report/start', json={'id': task_id, 'count': run_count})
+    api.request('POST', '/task/center/status', json={'id': task_id, 'status': 1})
     device = api.Devices()
     device.update_worker_status(id=worker_id, status=1)
 
@@ -30,5 +31,5 @@ def workers(name, worker_id, task_id, token):
     else:
         device.update_worker_status(id=worker_id, status=0)
 
-    api.request('POST', '/task/report/end', json={'id': task_id, 'status': random.randint(2, 3)})
+    api.request('POST', '/task/center/status', json={'id': task_id, 'status': random.randint(2, 3)})
 
