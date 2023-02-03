@@ -11,7 +11,7 @@ def workers(name, worker_id, task_id, token, kwargs):
     print(kwargs)
     globals.add('token', token)
 
-    run_count = random.randint(5, 10)
+    run_count = len(kwargs.get('cases'))
     print(f'开始 {name} 测试')
 
     api.request('POST', '/task/center/status', json={'id': task_id, 'status': 1})
