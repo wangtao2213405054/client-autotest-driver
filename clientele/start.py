@@ -28,6 +28,17 @@ class ReGetSystemUtilities(utils.GetSystemUtilities):
 worker_process = {}
 
 
+@socket.on('workerKill')
+def kill_worker(data):
+    """ 中止执行设备进程 """
+
+    worker = data.get('id')
+    progress = worker_process.get(worker)
+    if progress:
+        progress.kill()
+        logging.info('执行设备进程停止')
+
+
 class Starter:
     """ 启动器 """
 

@@ -14,7 +14,7 @@ def workers(name, worker_id, task_id, token, kwargs):
     run_count = len(kwargs.get('cases'))
     print(f'开始 {name} 测试')
 
-    api.request('POST', '/task/center/status', json={'id': task_id, 'status': 1})
+    api.request('POST', '/task/center/status', json={'id': task_id, 'status': 1, 'device': worker_id})
     device = api.Devices()
     device.update_worker_status(id=worker_id, status=1)
 
@@ -31,5 +31,5 @@ def workers(name, worker_id, task_id, token, kwargs):
     else:
         device.update_worker_status(id=worker_id, status=0)
 
-    api.request('POST', '/task/center/status', json={'id': task_id, 'status': random.randint(2, 3)})
+    api.request('POST', '/task/center/status', json={'id': task_id, 'status': random.randint(2, 3), 'device': worker_id})
 
