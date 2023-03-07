@@ -42,3 +42,4 @@ def request(method: str, uri: str, **kwargs) -> Union[Dict, List, str, int, None
         return body.get('data')
     except _error:
         logging.debug(traceback.format_exc())
+        return {}

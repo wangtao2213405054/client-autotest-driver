@@ -93,7 +93,6 @@ class TestCase(tester.CaseEvent):
         :param case: 要执行的用例信息
         :return:
         """
-        _steps = case.get('caseSteps', [])
         _pre = case.get('prePosition')  # 前置用例
         _post = case.get('postPosition')  # 后置用例
 
@@ -102,15 +101,17 @@ class TestCase(tester.CaseEvent):
             _case = api.get_case_info(_pre)
             self.run(_case)
 
-        self.case(_steps)
+        self.case(case)
 
         # 递归调用，执行后置用例
         if _post:
             _case = api.get_case_info(_post)
             self.run(_case)
 
-    def case(self, steps: dict) -> None:
+    def case(self, case: dict) -> None:
         """ 执行测试用例步骤 """
+        steps = case.get('caseSteps', [])
+        name = case.get('name')
         for index, item in enumerate(steps):
             try:
                 mapping = self.assemble(item)
@@ -121,7 +122,7 @@ class TestCase(tester.CaseEvent):
                     self.save_screenshots()
 
             except Exception as error:
-                self.errorStep = f'在执行 {steps.get("name")} 用例过程中的第 {index + 1} 个步骤: {item.get("name")} 时失败了'
+                self.errorStep = f'在执行 {name} 用例过程中的第 {index + 1} 个步骤: {item.get("name")} 时失败了'
                 raise error
 
     def start(self, **kwargs):
@@ -136,6 +137,7 @@ class TestCase(tester.CaseEvent):
         try:
             self.run(case_info)
         except Exception as e:
+            logging.info(traceback.format_exc())
             self.errorDetails = traceback.format_exc()
             self.errorInfo = str(e)
             self.status = 0
@@ -174,8 +176,9 @@ class TestCase(tester.CaseEvent):
 
         # 测试结束后将生成的 GIF 图片上传至云端
         folder_path = utils.set_path('screenshots')
-        file_path = os.path.join(folder_path, f"{time.strftime('%Y-%m-%d_%H_%M_%S')}.gif")
-        self.gif = api.upload_file(utils.gif(self.imagePaths, file_path)).get('url')
+        file_path = os.path.join(folder_path, f"{int(time.time() * 1000)}.gif")
+        response = api.upload_file(utils.gif(self.imagePaths, file_path))
+        self.gif = response.get('url') if response else None
 
         # 关闭应用进程
         self.quit()

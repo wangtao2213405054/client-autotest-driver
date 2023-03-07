@@ -33,3 +33,14 @@ class ClearError(Exception):
     def __str__(self):
         error_info = '清空异常, 请检查'
         return self.message or error_info
+
+
+class FusingError(Exception):
+    """ 熔断异常类 """
+
+    def __init__(self, message=None):
+        self.message = message
+
+    def __str__(self):
+        error_info = '失败数达到熔断阈值, 请检查用例和设备'
+        return self.message or error_info

@@ -3,8 +3,10 @@
 
 from .runner import TestRunner
 from .event import CaseEvent
+from .case import TestCase
 
 __all__ = [
     'TestRunner',
-    'CaseEvent'
+    'CaseEvent',
+    'TestCase'
 ]

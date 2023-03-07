@@ -4,8 +4,8 @@
 from clientele.conf.env import env_map
 from clientele import globals
 
-
 import socketio
+
 
 socket = socketio.Client(reconnection_delay=5)
 

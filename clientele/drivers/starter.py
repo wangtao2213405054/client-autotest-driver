@@ -21,14 +21,14 @@ class DriverStarter:
         _head_reset = self.device.get('headReset')
         _url = self.device.get('url')
 
-        if _browser.upper() == 'Chrome'.upper():
+        if _browser.lower() == 'Chrome'.lower():
             chrome_options = webdriver.ChromeOptions()
             chrome_options.headless = _head_reset
             if _mock:
                 chrome_options.add_argument(f'--proxy-server=http://127.0.0.1:{_port}')
             driver = webdriver.Chrome(options=chrome_options)
 
-        elif _browser.upper() == 'Firefox'.upper():
+        elif _browser.lower() == 'Firefox'.lower():
             profile_config = {
                 'network.proxy.type': 1,
                 'network.proxy.http': '127.0.0.1',
@@ -69,10 +69,10 @@ class DriverStarter:
 
     @property
     def run(self):
-        _platform: str = self.device.get('platform')
-        if _platform.upper() == 'Web'.upper():
+        _platform: str = self.device.get('platformName')
+        if _platform.lower() == 'Web'.lower():
             return self.selenium_starter
-        elif _platform.upper() == 'Android'.upper() or _platform.upper() == 'iOS'.upper():
+        elif _platform.lower() == 'Android'.lower() or _platform.lower() == 'iOS'.lower():
             return self.appium_starter
         else:
             _message = f'暂不支持的运行平台: {_platform}'

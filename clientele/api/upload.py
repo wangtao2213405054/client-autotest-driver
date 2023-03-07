@@ -4,10 +4,12 @@
 from clientele import api
 
 
-def upload_file(path: str) -> dict:
+def upload_file(path: str) -> api.request:
     """ 获取测试用例信息 """
 
-    if not path:
-        return {}
-
-    return api.request('POST', '/upload/file/image', files=dict(file=open(path, 'rb')))
+    return api.request(
+        'POST',
+        '/upload/file/image',
+        files=dict(file=open(path, 'rb')),
+        exceptions=Exception
+    )

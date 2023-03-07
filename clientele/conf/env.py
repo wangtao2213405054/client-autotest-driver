@@ -14,6 +14,7 @@ class Local(Base):
 
 class Daily(Base):
     """ 测试环境 """
+    DOMAIN = 'http://101.42.24.232/'
 
 
 class Public(Base):

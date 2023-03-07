@@ -1,9 +1,8 @@
 # _author: Coke
 # _date: 2022/11/21 11:03
 
-from clientele import utils, api, globals
+from clientele import utils, api, globals, tester
 from clientele.sockets import socket, create_app
-from clientele.actuator import workers
 
 import multiprocessing
 import socketio.exceptions
@@ -11,8 +10,11 @@ import logging
 import time
 
 
-tokens = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJXaW5kb3dzIiwidXNlcl9pZCI6ImJlYmYyNTljYTA2MTExZWQ5Y' \
-         'jdmNzBjZDBkMzJlYjMxIiwiZXhwIjpudWxsfQ.S_XftUuMMTrLtHpCMcgfz_CFzJoGU1xBVkUBSjDhmm4'
+tokens = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJXaW5kb3dzIiwidXNlcl9pZCI6ImJlYmYyNTljYTA2MTExZWQ' \
+         '5YjdmNzBjZDBkMzJlYjMxIiwiZXhwIjpudWxsfQ.S_XftUuMMTrLtHpCMcgfz_CFzJoGU1xBVkUBSjDhmm4'
+
+environment = 'local'
+globals.add('environment', environment)
 
 
 class ReGetSystemUtilities(utils.GetSystemUtilities):
@@ -55,10 +57,13 @@ class Starter:
         # 创建 socket client
         create_app()
 
-        self.devices = api.Devices()
-        master = self.devices.get_master_info
+        master = api.get_master_info()
         globals.add('master', master)
-        worker = self.devices.get_worker_list({'page': 1, 'pageSize': master['maxContext'], 'master': master['id']})
+        worker = api.get_worker_list(dict(
+            page=1,
+            pageSize=master.get('maxContext'),
+            master=master.get('id')
+        ))
         globals.add('worker', worker.get('items'))
 
     @property
@@ -128,15 +133,25 @@ class Starter:
             globals.add('freeTask', _task.get('free'))
             _task_list = _task.get('task')
 
+            # 共享变量
+            _memory = multiprocessing.Manager().dict()
+            _memory['token'] = self.token
+            # _memory['socket'] = socket
+
             for _task_item in _task_list:
                 _id = _task_item.get('power')
                 _device = self.get_worker_info(_id)
                 # 如果id在空闲设备列表并且此设备开关状态正常、进程正常，然后将任务分发
                 if _id in free_worker and _device.get('switch') and not worker_process.get(_id):
                     logging.info(f'已经将任务分发给 {_device.get("name")} 设备')
-                    _actuator = multiprocessing.Process(
-                        target=workers,
-                        args=(_device.get("name"), _id, _task_item.get('id'), self.token, _task_item)
+                    # _actuator = multiprocessing.Process(
+                    #     target=workers,
+                    #     args=(_device.get("name"), _id, _task_item.get('id'), self.token, _task_item)
+                    # )
+                    _actuator = tester.TestRunner(
+                        task_info=_task_item,
+                        device_info=_device,
+                        memory_info=_memory
                     )
                     worker_process[_id] = _actuator
                     _actuator.start()
