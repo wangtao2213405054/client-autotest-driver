@@ -160,7 +160,7 @@ class Driver(drivers.Selenium, drivers.Appium):
             name: str = None,
             wait_time: Union[float, int] = 5,
             interval: Union[float, int] = 0.5
-    ) -> tuple[bool, str]:
+    ) -> bool:
         """
         等待元素出现
         :param by: 元素类型
@@ -173,8 +173,6 @@ class Driver(drivers.Selenium, drivers.Appium):
         """
 
         end_time = time.monotonic() + wait_time
-        _result = False
-        _fail_message = f'在 {wait_time} 秒内没有找到 {name or value} 元素'
 
         while True:
             current_time = time.monotonic()
@@ -183,13 +181,12 @@ class Driver(drivers.Selenium, drivers.Appium):
 
             elements = self.find_elements(by, value, name)
             if len(elements) >= index + 1:
-                _result = True
-                _pass_message = f'在 {end_time - current_time} 秒内找到了 {name or value} 元素'
-                return _result, _pass_message
+                logging.info(f'在 {end_time - current_time} 秒内找到了 {name or value} 元素')
+                return True
 
             time.sleep(interval)
-
-        return _result, _fail_message
+        logging.info(f'在 {wait_time} 秒内没有找到 {name or value} 元素')
+        return False
 
     def screenshots(self, file_path: str = None, is_compression: bool = True) -> str:
         """

@@ -2,7 +2,6 @@
 # _date: 2022/12/9 10:57
 
 from clientele import api
-from clientele import globals
 
 import requests.exceptions
 

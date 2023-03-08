@@ -95,34 +95,44 @@ class TestCase(tester.CaseEvent):
         """
         _pre = case.get('prePosition')  # 前置用例
         _post = case.get('postPosition')  # 后置用例
+        steps = case.get('caseSteps', [])
+        name = case.get('name')
 
         # 递归调用 执行前置用例
         if _pre:
             _case = api.get_case_info(_pre)
             self.run(_case)
 
-        self.case(case)
+        self.case(steps, name)
 
         # 递归调用，执行后置用例
         if _post:
             _case = api.get_case_info(_post)
             self.run(_case)
 
-    def case(self, case: dict) -> None:
+    def case(self, steps: dict, name: str) -> None:
         """ 执行测试用例步骤 """
-        steps = case.get('caseSteps', [])
-        name = case.get('name')
+
         for index, item in enumerate(steps):
+            steps_name = item.get('name', '')
+            subset = item.get('subset', False)
+            children = item.get('children', [])
+            params = item.get('params', {})
+
             try:
                 mapping = self.assemble(item)
-                mapping(**item.get('params'))
+                result = mapping(**params)
+
+                # 如果方法存在子元素并且父元组判断为真, 则进行递归
+                if subset and result:
+                    self.case(children, steps_name)
 
                 # 如果事件需要截图则进行截图
                 if item.get('screenshot'):
                     self.save_screenshots()
 
             except Exception as error:
-                self.errorStep = f'在执行 {name} 用例过程中的第 {index + 1} 个步骤: {item.get("name")} 时失败了'
+                self.errorStep = f'在执行 {name} 过程中的第 {index + 1} 个步骤: {steps_name} 时失败了'
                 raise error
 
     def start(self, **kwargs):

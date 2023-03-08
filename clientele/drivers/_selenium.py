@@ -27,7 +27,7 @@ class Selenium:
 
     def get_window_size(self) -> tuple[int, int]: ...
 
-    def case(self, steps: dict) -> None: ...
+    def case(self, steps: dict, name: str) -> None: ...
 
     def wait_elements_appear(
             self,
@@ -37,7 +37,7 @@ class Selenium:
             name: str = None,
             wait_time: Union[int, float] = 5,
             interval: Union[float, int] = 0.5
-    ) -> tuple[bool, str]: ...
+    ) -> bool: ...
 
     def find_elements_location(self, by: str, value: str, index: int = 0, name: str = None) -> tuple[int, int]: ...
 
@@ -76,7 +76,6 @@ class Selenium:
         logging.info('正在获取当前页面的Cookies并存储')
         cookies = self.driver.get_cookies()
         globals.add('cookies', json.dumps(cookies))
-        globals.add('loginStatus', True)
 
     def write_cookies(self) -> None:
         """

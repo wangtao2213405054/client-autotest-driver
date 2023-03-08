@@ -19,6 +19,7 @@ setup(
         'imageio',
         'psutil',
         'python-socketio',
-        'websocket-client'
+        'websocket-client',
+        'pypinyin'
     ]
 )

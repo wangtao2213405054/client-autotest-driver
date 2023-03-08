@@ -10,8 +10,8 @@ import logging
 import time
 
 
-tokens = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJXaW5kb3dzIiwidXNlcl9pZCI6ImJlYmYyNTljYTA2MTExZWQ' \
-         '5YjdmNzBjZDBkMzJlYjMxIiwiZXhwIjpudWxsfQ.S_XftUuMMTrLtHpCMcgfz_CFzJoGU1xBVkUBSjDhmm4'
+tokens = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IldpbmRvd3MiLCJ1c2VyX2lkIjoiZGUzMWViOTNiZD' \
+         'U2MTFlZGI3MzM4NGE5Mzg1ZTVkN2YiLCJleHAiOm51bGx9.BjP2eAWz0tt6nkyVT_nJNAX2EhJHFZwHNSTjA2h1gVo'
 
 environment = 'local'
 globals.add('environment', environment)
@@ -44,20 +44,19 @@ def kill_worker(data):
 class Starter:
     """ 启动器 """
 
-    def __init__(self, token, logger=False):
-
-        if logger:
-            utils.logger(logger)
+    def __init__(self, token):
 
         globals.add('freeTask', True)  # 从服务器获取是否有空闲任务
-
-        self.token = token
         globals.add('token', token)
+        self.token = token
+        master = api.get_master_info()
 
+        self.logging_level = master.get('logging')
+        utils.logger(self.logging_level)
+        logging.debug(f'当前控制机日志等级为: {self.logging_level}')
         # 创建 socket client
         create_app()
 
-        master = api.get_master_info()
         globals.add('master', master)
         worker = api.get_worker_list(dict(
             page=1,
@@ -173,5 +172,5 @@ if __name__ == '__main__':
     _system = ReGetSystemUtilities()
     _system.start()
     # 执行任务函数
-    obj = Starter(tokens, logger=utils.INFO)
+    obj = Starter(tokens)
     obj.run()

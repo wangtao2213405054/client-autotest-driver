@@ -7,6 +7,7 @@ from .task import *
 from .devices import *
 from .case import *
 from .upload import *
+from .project import *
 
 
 __all__ = [
