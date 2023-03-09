@@ -45,6 +45,7 @@ class TestRunner(multiprocessing.Process):
             id=self.task_info.get('projectId')
         ))
         globals.add('projectName', f"{utils.pinyin(project_info.get('name'))}{project_info.get('id')}")
+
         api.update_task_status(dict(
             id=self.task_id,
             status=1,
@@ -63,6 +64,7 @@ class TestRunner(multiprocessing.Process):
 
         except Exception as e:
             logging.info(e)
+            logging.error(traceback.format_exc())
             api.update_task_status(dict(
                 id=self.task_id,
                 status=3,
@@ -98,9 +100,9 @@ class TestRunner(multiprocessing.Process):
             for key, value in globals.memory.items():
                 memory[key] = value
 
-            for item in cases:
-                params = (item, self.start_conf, memory, self.logging_level)
-                son = pool.apply(runner, args=params) if not item else pool.apply_async(runner, args=params)
+            for index, item in enumerate(cases):
+                params = (item, self.start_conf, self.task_id, memory, self.logging_level)
+                son = pool.apply(runner, args=params) if not index else pool.apply_async(runner, args=params)
                 result.append(son)
 
             pool.close()
@@ -108,17 +110,18 @@ class TestRunner(multiprocessing.Process):
 
         else:
             for item in cases:
-                params = (item, self.start_conf)
+                params = (item, self.start_conf, self.task_id)
                 result.append(runner(*params))
 
         return list(map(lambda x: x.get() if isinstance(x, multiprocessing.pool.ApplyResult) else x, result))
 
 
-def runner(case_id: int, conf: dict, manager=None, level=None) -> dict:
+def runner(case_id: int, conf: dict, task_id, manager=None, level=None) -> dict:
     """
     启动测试任务, 并执行测试用例
     :param case_id: 用例ID
     :param conf: 设备配置
+    :param task_id: 任务ID
     :param manager: 是否为多进程模式
     :param level: 日志等级, 非多进程可忽略
     :return: 返回用例执行的结果
@@ -132,6 +135,8 @@ def runner(case_id: int, conf: dict, manager=None, level=None) -> dict:
     starter = drivers.DriverStarter(**conf)
     _actuator = tester.TestCase(starter.run)
     _result = _actuator.start(id=case_id)
+    _result['id'] = task_id
+    logging.debug(_result)
     api.new_task_report(_result)
 
     return _result

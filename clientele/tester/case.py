@@ -53,7 +53,7 @@ class TestCase(tester.CaseEvent):
         :return:
         """
         _fabric = dict(
-            id=self.id,
+            caseId=self.id,
             name=self.name,
             details=self.details,
             module=self.module,
@@ -66,8 +66,8 @@ class TestCase(tester.CaseEvent):
             errorInfo=self.errorInfo,
             errorDetails=self.errorDetails,
             gif=self.gif,
-            startTime=self.startTime,
-            stopTime=self.stopTime,
+            startTime=time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(self.startTime)),
+            stopTime=time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(self.stopTime)),
             duration=self.duration
         )
         return _fabric
@@ -182,13 +182,14 @@ class TestCase(tester.CaseEvent):
         """ 在测试用例结束后执行此方法 """
 
         self.stopTime = time.time()
-        self.duration = round(self.stopTime - self.startTime, 3)
+        self.duration = round(self.stopTime - self.startTime, 2)
 
         # 测试结束后将生成的 GIF 图片上传至云端
         folder_path = utils.set_path('screenshots')
         file_path = os.path.join(folder_path, f"{int(time.time() * 1000)}.gif")
-        response = api.upload_file(utils.gif(self.imagePaths, file_path))
-        self.gif = response.get('url') if response else None
+        if self.imagePaths:
+            response = api.upload_file(utils.gif(self.imagePaths, file_path))
+            self.gif = response.get('url') if response else None
 
         # 关闭应用进程
         self.quit()

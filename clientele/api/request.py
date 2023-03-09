@@ -25,20 +25,22 @@ def request(method: str, uri: str, **kwargs) -> Union[Dict, List, str, int, None
     header = dict(
         token=globals.get('token')
     )
-
+    logging.debug(f'请求信息: {uri}')
+    logging.debug(f'{kwargs.get("json")}')
     try:
         response = requests.request(method, url, headers=header, **kwargs)
         if response.status_code != 200:
-            _message = f'服务器内部错误, 状态码: {response.status_code}'
+            _message = f'服务器内部错误, 接口: {uri} 状态码: {response.status_code}'
             logging.error(_message)
             raise exceptions.ServerError(_message)
 
         body = response.json()
         if body.get('code') != 1:
-            _message = f'服务器响应错误, 错误信息: {body.get("msg")}'
+            _message = f'服务器响应错误, 接口: {uri} 错误信息: {body.get("msg")}'
             logging.error(_message)
             raise exceptions.ServerError(_message)
 
+        logging.debug(f'响应信息: {body}')
         return body.get('data')
     except _error:
         logging.debug(traceback.format_exc())

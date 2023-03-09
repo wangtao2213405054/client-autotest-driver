@@ -8,7 +8,6 @@ from clientele import globals
 from typing import Union
 
 import logging
-import json
 
 
 class Selenium:
@@ -75,15 +74,19 @@ class Selenium:
         """
         logging.info('正在获取当前页面的Cookies并存储')
         cookies = self.driver.get_cookies()
-        globals.add('cookies', json.dumps(cookies))
+        globals.add('cookies', cookies)
 
     def write_cookies(self) -> None:
         """
         将 cookies 写入浏览器
         """
         logging.info('正在将已存储的Cookies写入浏览器')
-        for cookie in json.loads(globals.get('cookies')):
-            self.driver.add_cookie(cookie)
+        for cookie in globals.get('cookies'):
+            # 莫名其妙的问题, 当添加 cookie 设置了其他值时, 会出现失败的情况
+            self.driver.add_cookie(dict(
+                name=cookie.get('name'),
+                value=cookie.get('value')
+            ))
 
     def delete_cookies(self) -> None:
         """
