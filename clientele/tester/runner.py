@@ -116,7 +116,7 @@ class TestRunner(multiprocessing.Process):
         return list(map(lambda x: x.get() if isinstance(x, multiprocessing.pool.ApplyResult) else x, result))
 
 
-def runner(case_id: int, conf: dict, task_id, manager=None, level=None) -> dict:
+def runner(case_id: int, conf: dict, task_id: int, manager: multiprocessing.Manager = None, level: str = None) -> dict:
     """
     启动测试任务, 并执行测试用例
     :param case_id: 用例ID
