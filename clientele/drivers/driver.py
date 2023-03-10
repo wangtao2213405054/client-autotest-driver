@@ -185,7 +185,7 @@ class Driver(drivers.Selenium, drivers.Appium):
                 return True
 
             time.sleep(interval)
-        logging.info(f'在 {wait_time} 秒内没有找到 {name or value} 元素')
+        logging.info(f'在 {float(wait_time)} 秒内没有找到 {name or value} 元素')
         return False
 
     def screenshots(self, file_path: str = None, is_compression: bool = True) -> str:

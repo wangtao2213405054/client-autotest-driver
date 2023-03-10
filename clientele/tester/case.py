@@ -147,7 +147,6 @@ class TestCase(tester.CaseEvent):
         try:
             self.run(case_info)
         except Exception as e:
-            logging.info(traceback.format_exc())
             self.errorDetails = traceback.format_exc()
             self.errorInfo = str(e)
             self.status = 0

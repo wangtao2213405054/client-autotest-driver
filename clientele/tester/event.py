@@ -35,7 +35,8 @@ class CaseEvent(drivers.Driver):
         """ 继承 screenshots 方法后将图片上传至云端并返回 url 链接 """
         path = self.screenshots()
         url = api.upload_file(path).get('url')
-        self.images.append(url)
+        if url:
+            self.images.append(url)
         return url
 
     def save_screenshots(self, file_path: str = None, is_compression: bool = True) -> str:
@@ -72,3 +73,7 @@ class CaseEvent(drivers.Driver):
         """
 
         return utils.operation(utils.get(key), condition, utils.transition(value, types))
+
+    @staticmethod
+    def raise_error():
+        raise PermissionError('这是一个测试的步骤')
