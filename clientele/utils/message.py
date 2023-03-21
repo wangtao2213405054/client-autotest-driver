@@ -230,7 +230,7 @@ class Lark:
         return timestamp, sign
 
     @property
-    def request(self) -> Union[dict]:
+    def request(self) -> Union[dict, None]:
         try:
             response = requests.request('POST', self.url, json=self.body)
 
