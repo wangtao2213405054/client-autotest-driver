@@ -25,6 +25,7 @@ def compress(infile, target=100, step=10, quality=80) -> str:
     file_size = os.path.getsize(infile)
     size = file_size / 1024
 
+    # 这个方法是需要优化的, 在 Mac 系统中的执行时间过长了
     while size > target:
         image = Image.open(infile)
         image.save(infile, quality=quality)
