@@ -1,6 +1,47 @@
-# 构建包
-`python setup.py sdist`
+# 客户端自动化驱动端文档
 
-安装包构建完成后会在dist 目录下生成一个`clientele-*.tar.gz`文件
+## 简介
 
-使用 `pip install clientele-*.tar.gz`即可
+本程序是一个客户端自动化驱动端，使用 appium 和 selenium 技术来完成服务器下达的自动化命令，并将执行结果反馈到服务器中。本程序还支持监控本地设备，配合客户端自动化平台的数据来驱动 appium、selenium 完成自动化测试。本程序支持多进程运行，但 appium 暂不支持。
+
+## 环境依赖
+
+- Python 3.9
+- Selenium 3.141.0 或以上版本
+
+注意：需要安装 Appium 环境，具体安装方法请参考 Appium 的官方文档。
+注意：需要安装 Selenium 环境，具体安装方法请参考 Selenium 的官方文档。
+
+## 安装步骤
+
+1. 下载本程序代码，并解压到本地目录。
+2. 进入程序目录，执行以下命令安装所需依赖：`python setup.py install`
+
+注意：需要先安装好 Appium 环境。
+
+## 使用说明
+
+#### 配置服务器 Token。
+
+在程序代码中找到以下代码段，将其中的 SERVER_TOKEN 替换为实际的服务器 Token。
+`SERVER_TOKEN = "YOUR_SERVER_TOKEN"`
+
+#### 运行程序。
+
+在终端或命令行中进入程序所在目录，执行以下命令：`python start.py YOUR_SERVER_TOKEN`
+
+
+其中 YOUR_SERVER_TOKEN 为实际的服务器 Token。
+
+程序将连接到服务器，等待服务器下达自动化命令。
+
+当收到自动化命令后，程序将使用 appium 和 selenium 技术自动化执行命令，并将执行结果反馈到服务器中。
+
+本程序还支持监控本地设备，可以在客户端自动化平台上查看本地设备的状态。
+
+## 注意事项
+
+- 在使用本程序时，请确保已经正确安装了 Appium 环境。
+- 本程序需要联网才能正常工作，请确保计算机已经联网。
+- 在使用本程序时，请务必配置正确的服务器 Token，否则程序将无法连接到服务器。
+- 本程序不需要启动端口，只需要通过命令行执行 start.py 文件并指定服务器 Token 即可。
