@@ -1,9 +1,11 @@
 # _author: Coke
 # _date: 2022/7/20 12:02
 
-from selenium.webdriver import Remote
-from selenium.webdriver.remote.webelement import WebElement
+
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver import Remote
 from clientele import utils, drivers
 from typing import Union
 
@@ -172,21 +174,16 @@ class Driver(drivers.Selenium, drivers.Appium):
         :return:
         """
 
-        end_time = time.monotonic() + wait_time
-
-        while True:
-            current_time = time.monotonic()
-            if current_time > end_time:
-                break
-
-            elements = self.find_elements(by, value, name)
-            if len(elements) >= index + 1:
-                logging.info(f'在 {end_time - current_time} 秒内找到了 {name or value} 元素')
-                return True
-
-            time.sleep(interval)
-        logging.info(f'在 {float(wait_time)} 秒内没有找到 {name or value} 元素')
-        return False
+        start_time = time.monotonic()
+        try:
+            WebDriverWait(self.driver, wait_time, interval).until(
+                lambda x: x.find_element(by, value)[index]
+            )
+            logging.info(f'在 {time.monotonic() - start_time} 秒内找到了 {name or value} 元素')
+            return True
+        except (Exception,):
+            logging.info(f'在 {float(wait_time)} 秒内没有找到 {name or value} 元素')
+            return False
 
     def screenshots(self, file_path: str = None, is_compression: bool = True) -> str:
         """

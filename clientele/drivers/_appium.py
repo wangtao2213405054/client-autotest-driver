@@ -166,14 +166,21 @@ class Appium:
         duration *= 1000
         start_x, start_y = self.find_elements_location(by, value, index, name)
         width, height = self.find_elements_size(by, value, index, name)
-        width += start_x
-        height += start_y
+        end_x, end_y = start_x + width, start_y + height
+        _swipe = dict(
+            horizontal=list(map(
+                lambda x: int(x),
+                [start_x + width * start, start_y + height / 2, end_x * end, start_y + height / 2]
+            )),
+            vertical=list(map(
+                lambda x: int(x),
+                [start_x + width / 2, start_y + height * start, start_x + width / 2, end_y * end]
+            ))
+        )
 
-        swipe = self._swipe(width, height, start, end)
-        axis = swipe.get(handle)
-
+        x1, y1, x2, y2 = _swipe.get(handle)
         action = TouchAction(self.driver)
-        return action.press(*axis[0: 2]).wait(int(duration)).move_to(*axis[2: 4]).release().perform()
+        return action.press(x=x1, y=y1).wait(int(duration)).move_to(x=x2, y=y1).release().perform()
 
     def quit(self):
         """ 关闭应用 """
