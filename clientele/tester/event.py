@@ -39,7 +39,7 @@ class CaseEvent(drivers.Driver):
             self.images.append(url)
         return url
 
-    def save_screenshots(self, file_path: str = None, is_compression: bool = True) -> str:
+    def save_screenshots(self, file_path: str = None, is_compression: bool = False) -> str:
         """
         重写 screenshots 方法, 并将图片地址存放在 imagePaths 中
         :param file_path:

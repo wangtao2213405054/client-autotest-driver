@@ -10,8 +10,8 @@ import logging
 import time
 
 
-tokens = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IldpbmRvd3MiLCJ1c2VyX2lkIjoiZGUzMWViOTNiZD' \
-         'U2MTFlZGI3MzM4NGE5Mzg1ZTVkN2YiLCJleHAiOm51bGx9.BjP2eAWz0tt6nkyVT_nJNAX2EhJHFZwHNSTjA2h1gVo'
+tokens = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1hYyIsInVzZXJfaWQiOiI3OGNmMzBjZWJmNDYxMWVkOTA0ZWF' \
+         'jZGU0ODAwMTEyMiIsImV4cCI6bnVsbH0.goxkZCM1Ssh27CQ-FGAU0MC7YepWyQbNJCYlIQT79Yo'
 
 environment = 'local'
 globals.add('environment', environment)
