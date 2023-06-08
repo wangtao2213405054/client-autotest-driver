@@ -177,7 +177,7 @@ class Driver(drivers.Selenium, drivers.Appium):
         start_time = time.monotonic()
         try:
             WebDriverWait(self.driver, wait_time, interval).until(
-                lambda x: x.find_element(by, value)[index]
+                lambda x: x.find_elements(by, value)[index]
             )
             logging.info(f'在 {time.monotonic() - start_time} 秒内找到了 {name or value} 元素')
             return True
