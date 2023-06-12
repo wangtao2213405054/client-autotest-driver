@@ -1,11 +1,11 @@
 # _author: Coke
 # _date: 2022/7/20 12:19
 
-from selenium.webdriver.remote.webelement import WebElement
-from appium.webdriver import Remote
-from appium.webdriver.common.touch_action import TouchAction
 from appium.protocols.webdriver.can_execute_commands import CanExecuteCommands
+from selenium.webdriver.remote.webelement import WebElement
 from typing import TypeVar, Union, Optional
+from appium.webdriver import Remote
+from clientele import globals
 
 import logging
 
@@ -140,48 +140,6 @@ class Appium:
 
         return self.driver.swipe(*direction.get('value'), int(duration))
 
-    def find_element_swipe(
-            self,
-            by: str,
-            value: str,
-            index: int = 0,
-            name: str = None,
-            handle: str = 'vertical',
-            start: float = 0.8,
-            end: float = 0.2,
-            duration: float = 0.5
-    ) -> 'TouchAction':
-        """
-        寻找到指定的元素后在元素中进行按压滑动
-        :param by: 元素类型
-        :param value: 元素值
-        :param index: 索引
-        :param name: 元素名称
-        :param handle: 滑动方向
-        :param start: 开始位置比例
-        :param end: 结束位置比例
-        :param duration: 滑动时间
-        :return:
-        """
-        duration *= 1000
-        start_x, start_y = self.find_elements_location(by, value, index, name)
-        width, height = self.find_elements_size(by, value, index, name)
-        end_x, end_y = start_x + width, start_y + height
-        _swipe = dict(
-            horizontal=list(map(
-                lambda x: int(x),
-                [start_x + width * start, start_y + height / 2, end_x * end, start_y + height / 2]
-            )),
-            vertical=list(map(
-                lambda x: int(x),
-                [start_x + width / 2, start_y + height * start, start_x + width / 2, end_y * end]
-            ))
-        )
-
-        x1, y1, x2, y2 = _swipe.get(handle)
-        action = TouchAction(self.driver)
-        return action.press(x=x1, y=y1).wait(int(duration)).move_to(x=x2, y=y1).release().perform()
-
     def quit(self):
         """ 关闭应用 """
-        self.driver.close_app()
+        self.driver.terminate_app(globals.get('appId'))

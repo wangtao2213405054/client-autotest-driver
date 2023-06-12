@@ -11,7 +11,8 @@ memory = dict(
     platform='ios',
     ports=[],
     environment='local',
-    token='test'
+    token='test',
+    appId=''  # APP ID Android is appPackage iOS is BundleId
 )
 
 
