@@ -158,7 +158,6 @@ class GetSystemUtilities(threading.Thread):
         """ 获取磁盘信息 """
         disk = psutil.disk_partitions()
         total = 0
-        used = 0
         free = 0
         byte = 1024 * 1024 * 1024
         for item in disk:
