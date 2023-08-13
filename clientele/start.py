@@ -21,10 +21,10 @@ class ReGetSystemUtilities(utils.GetSystemUtilities):
 
     def reported(self) -> None:
         try:
+            print(self.get)
             socket.emit('system',  data=self.get)
         except socketio.exceptions.BadNamespaceError:
             pass
-
 
 # 执行机进程对象
 worker_process = {}

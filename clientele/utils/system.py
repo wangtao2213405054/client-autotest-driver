@@ -99,7 +99,7 @@ class GetSystemUtilities(threading.Thread):
         :param interval: 线程间隔时间
         :param kwargs: Thread class init params
         """
-        super().__init__(**kwargs)
+        super().__init__(**kwargs, daemon=True)
         self.cpu = dict(
             count=psutil.cpu_count(),
             logical=psutil.cpu_count(logical=False),
@@ -164,11 +164,10 @@ class GetSystemUtilities(threading.Thread):
         for item in disk:
             usage = psutil.disk_usage(item.mountpoint)
             total += usage.total
-            used += usage.used
             free += usage.free
             if platform.system() != 'Windows':
                 break
-
+        used = total - free
         self.disk = dict(
             total=f'{total / byte:.2f}GB',
             used=f'{used / byte:.2f}GB',
