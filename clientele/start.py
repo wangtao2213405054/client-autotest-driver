@@ -10,8 +10,8 @@ import logging
 import time
 
 
-tokens = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1hYyIsInVzZXJfaWQiOiI3OGNmMzBjZWJmNDYxMWVkOTA0ZWF' \
-         'jZGU0ODAwMTEyMiIsImV4cCI6bnVsbH0.goxkZCM1Ssh27CQ-FGAU0MC7YepWyQbNJCYlIQT79Yo'
+tokens = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Iua1i-ivleWViiIsInVzZXJfaWQiOiI3YTg5MDNkNjM5OTQxMWVl' \
+         'OTQ5NmFjZGU0ODAwMTEyMiIsImV4cCI6bnVsbH0.37erxYXNXRfTyIY1p5_Mq3ow0mYZP3r66XyA8Dv8IzI'
 
 environment = 'local'
 globals.add('environment', environment)
@@ -64,6 +64,10 @@ class Starter:
             master=master.get('id')
         ))
         globals.add('worker', worker.get('items'))
+
+        # 获取电脑硬件信息
+        _system = ReGetSystemUtilities(master=master.get('id'))
+        _system.start()
 
     @property
     def get_master(self):
@@ -168,9 +172,6 @@ class Starter:
 
 
 if __name__ == '__main__':
-    # 获取电脑硬件信息
-    _system = ReGetSystemUtilities()
-    _system.start()
     # 执行任务函数
     obj = Starter(tokens)
     obj.run()

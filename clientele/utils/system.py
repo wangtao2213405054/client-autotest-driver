@@ -92,9 +92,10 @@ def get_host() -> str:
 class GetSystemUtilities(threading.Thread):
     """ 获取当前设备的基本信息 """
 
-    def __init__(self, interval=1, **kwargs):
+    def __init__(self, master, interval=1, **kwargs):
         """
         重写 threading.Thread 类
+        :param master: 控制机 id
         :param interval: 线程间隔时间
         :param kwargs: Thread class init params
         """
@@ -110,6 +111,7 @@ class GetSystemUtilities(threading.Thread):
         self.network = None
         self.virtual = None
         self.disk = None
+        self.master = master
 
     def run(self) -> None:
         self.get_started_time()
@@ -216,6 +218,7 @@ class GetSystemUtilities(threading.Thread):
         :return:
         """
         return dict(
+            id=self.master,
             cpu=self.cpu,
             startedTime=self.started,
             network=self.network,
