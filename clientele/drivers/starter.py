@@ -63,7 +63,7 @@ class DriverStarter:
 
         from appium import webdriver
         _port = self.device.get('appiumServerPort')
-        driver = webdriver.Remote(f'http://localhost:{_port}/wd/hub', self.device)
+        driver = webdriver.Remote(f'http://localhost:{_port}/', self.device)
 
         return driver
 
