@@ -3,7 +3,7 @@
 
 from appium.protocols.webdriver.can_execute_commands import CanExecuteCommands
 from selenium.webdriver.remote.webelement import WebElement
-from typing import TypeVar, Union, Optional
+from typing import TypeVar, Union, Optional, Tuple
 from appium.webdriver import Remote
 from clientele import globals
 
@@ -26,7 +26,7 @@ class Appium:
 
     def find_elements_send_keys(self, by: str, value: str, content: str, index: int = 0, name: str = None) -> None: ...
 
-    def get_window_size(self) -> tuple[int, int]: ...
+    def get_window_size(self) -> Tuple[int, int]: ...
 
     def wait_elements_appear(
             self,
@@ -38,9 +38,9 @@ class Appium:
             interval: Union[int, float] = 0.5
     ) -> bool: ...
 
-    def find_elements_location(self, by: str, value: str, index: int = 0, name: str = None) -> tuple[int, int]: ...
+    def find_elements_location(self, by: str, value: str, index: int = 0, name: str = None) -> Tuple[int, int]: ...
 
-    def find_elements_size(self, by: str, value: str, index: int = 0, name: str = None) -> tuple[int, int]: ...
+    def find_elements_size(self, by: str, value: str, index: int = 0, name: str = None) -> Tuple[int, int]: ...
 
     def case(self, steps: dict, name: str) -> None: ...
 
@@ -92,7 +92,7 @@ class Appium:
 
             return self.driver.remove_app(bundle_id)
 
-    def get_android_bundle(self) -> tuple[str, str]:
+    def get_android_bundle(self) -> Tuple[str, str]:
         """
         获取当前 Android 设备运行包的 clientele package and clientele activity
         :return:

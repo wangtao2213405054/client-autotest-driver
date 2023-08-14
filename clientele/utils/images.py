@@ -3,7 +3,7 @@
 
 from PIL import Image
 import imageio.v2 as imageio
-from typing import Union
+from typing import Union, Tuple
 
 import logging
 import os
@@ -62,7 +62,7 @@ def measure(infile, multiple) -> str:
     return infile
 
 
-def cut(infile, area: tuple, aspect: tuple[int, int]) -> str:
+def cut(infile, area: Tuple, aspect: Tuple[int, int]) -> str:
     """
     对图片指定区域进行裁切并覆盖图片
     :param infile: 图片路径

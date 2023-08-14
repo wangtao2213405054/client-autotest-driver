@@ -60,3 +60,15 @@ def clear() -> None:
     """
     logging.debug('清空内存变量')
     memory.clear()
+
+
+def cover(data: dict) -> dict:
+    """
+    将传递过来的数据添加至变量中
+    :param data: 需要写入的数据
+    :return:
+    """
+    for key, value in data.items():
+        add(key, value)
+
+    return memory

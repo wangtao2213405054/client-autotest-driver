@@ -11,7 +11,7 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import ActionChains
 from selenium.webdriver import Remote
 from clientele import utils, drivers
-from typing import Union
+from typing import Union, Tuple
 
 import logging
 import time
@@ -105,7 +105,7 @@ class Driver(drivers.Selenium, drivers.Appium):
 
         return elements[index].send_keys(content)
 
-    def find_elements_location(self, by: str, value: str, index: int = 0, name: str = None) -> tuple[int, int]:
+    def find_elements_location(self, by: str, value: str, index: int = 0, name: str = None) -> Tuple[int, int]:
         """
         获取当前元素所处的坐标
         :param by: 元素类型
@@ -125,7 +125,7 @@ class Driver(drivers.Selenium, drivers.Appium):
 
         return x, y
 
-    def find_elements_size(self, by: str, value: str, index: int = 0, name: str = None) -> tuple[int, int]:
+    def find_elements_size(self, by: str, value: str, index: int = 0, name: str = None) -> Tuple[int, int]:
         """
         查找当前元素所在大小
         :param by: 元素类型
@@ -146,7 +146,7 @@ class Driver(drivers.Selenium, drivers.Appium):
 
         return width, height
 
-    def get_window_size(self) -> tuple[int, int]:
+    def get_window_size(self) -> Tuple[int, int]:
         """
         获取窗口宽高
         :return:

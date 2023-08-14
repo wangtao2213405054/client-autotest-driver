@@ -2,9 +2,10 @@
 # _date: 2022/8/17 22:56
 
 from clientele.api.request import request
+from typing import Tuple
 
 
-def get_email(project_id) -> tuple[bool, dict]:
+def get_email(project_id) -> Tuple[bool, dict]:
     """
     获取邮箱列表
     :return: (switch, info) 返回邮件是否开启和邮件配置信息
@@ -23,7 +24,7 @@ def get_email(project_id) -> tuple[bool, dict]:
     return response.get('state'), params
 
 
-def get_talk(project_id) -> tuple[bool, list]:
+def get_talk(project_id) -> Tuple[bool, list]:
     """
     获取钉钉机器人配置
     :return: (switch, info) 返回钉钉机器人是否开启和配置信息
@@ -46,7 +47,7 @@ def get_talk(project_id) -> tuple[bool, list]:
     return response.get('status'), robot_list
 
 
-def get_lark(project_id) -> tuple[bool, list]:
+def get_lark(project_id) -> Tuple[bool, list]:
     """
     获取飞书机器人配置
     :return: (switch, info) 返回飞书机器人是否开启和配置信息

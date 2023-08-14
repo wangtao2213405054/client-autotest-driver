@@ -2,6 +2,7 @@
 # _date: 2022/7/26 22:41
 
 from abc import abstractmethod
+from typing import Tuple
 
 import threading
 import platform
@@ -123,9 +124,10 @@ class GetSystemUtilities(threading.Thread):
             self.get_virtual_memory()
             self.get_disk()
             now_send, now_recv = self.get_network
+
             self.network = dict(
-                send=round((now_send - send) / 1024, 2),
-                recv=round((now_recv - recv) / 1024, 2)
+                send=self.format_flow(now_send - send),
+                recv=self.format_flow(now_recv - recv)
             )
             self.reported()
 
@@ -149,10 +151,22 @@ class GetSystemUtilities(threading.Thread):
             percent=virtual.percent
         )
 
+    @staticmethod
+    def format_flow(flow):
+        if flow < 1024:
+            return f"{flow:.1f}B"
+        elif flow < 1024 ** 2:
+            return f"{flow / 1024:.1f}KB"
+        elif flow < 1024 ** 3:
+            return f"{flow / (1024 ** 2):.1f}MB"
+        else:
+            return f"{flow / (1024 ** 3):.1f}GB"
+
     @property
-    def get_network(self) -> tuple[int, int]:
+    def get_network(self) -> Tuple[int, int]:
         """ 获取网络信息 """
-        return psutil.net_io_counters().bytes_sent, psutil.net_io_counters().bytes_recv
+        _network = psutil.net_io_counters()
+        return _network.bytes_sent, _network.bytes_recv
 
     def get_disk(self) -> None:
         """ 获取磁盘信息 """

@@ -9,9 +9,8 @@ import socketio.exceptions
 import logging
 import time
 
-
-tokens = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Iua1i-ivleWViiIsInVzZXJfaWQiOiI3YTg5MDNkNjM5OTQxMWVl' \
-         'OTQ5NmFjZGU0ODAwMTEyMiIsImV4cCI6bnVsbH0.37erxYXNXRfTyIY1p5_Mq3ow0mYZP3r66XyA8Dv8IzI'
+tokens = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Iua1i-ivleWViiIsInVzZXJfaWQiOiIwYTViYWZmNDNhNGQxMWVlYTR' \
+         'iZjUwODQ5MjQxYTBlMCIsImV4cCI6bnVsbH0.cZkMp0rX6E4cyW3EEec7xxthu_XzfbbHHYcSZrKnJ-U'
 
 environment = 'local'
 globals.add('environment', environment)
@@ -21,10 +20,10 @@ class ReGetSystemUtilities(utils.GetSystemUtilities):
 
     def reported(self) -> None:
         try:
-            print(self.get)
-            socket.emit('system',  data=self.get)
+            socket.emit('system', data=self.get)
         except socketio.exceptions.BadNamespaceError:
             pass
+
 
 # 执行机进程对象
 worker_process = {}
