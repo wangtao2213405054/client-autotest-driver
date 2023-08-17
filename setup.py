@@ -20,6 +20,7 @@ setup(
         'psutil',
         'python-socketio',
         'websocket-client',
-        'pypinyin'
+        'pypinyin',
+        'mitmproxy'
     ]
 )

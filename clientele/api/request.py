@@ -4,16 +4,21 @@
 from clientele.conf.env import env_map
 from clientele import globals, exceptions
 from typing import Union, Dict, List
+from urllib3.exceptions import InsecureRequestWarning
 
-import requests
 import traceback
+import warnings
+import requests
 import logging
+
+warnings.filterwarnings('ignore', category=InsecureRequestWarning)
 
 
 def request(method: str, uri: str, **kwargs) -> Union[Dict, List, str, int, None]:
     """
     基于 requests 库进行了二次业务封装
     所有跟 clientele 服务器做交互的库都应该调用此方法
+    在本地代理时忽略证书验证
     :param method: 请求类型
     :param uri:  请求的路径
     :return: 返回服务器返回消息体中的 data 数据
@@ -28,7 +33,7 @@ def request(method: str, uri: str, **kwargs) -> Union[Dict, List, str, int, None
     logging.debug(f'请求信息: {uri}')
     logging.debug(f'{kwargs.get("json")}')
     try:
-        response = requests.request(method, url, headers=header, **kwargs)
+        response = requests.request(method, url, headers=header, **kwargs, verify=False)
         if response.status_code != 200:
             _message = f'服务器内部错误, 接口: {uri} 状态码: {response.status_code}'
             logging.error(_message)

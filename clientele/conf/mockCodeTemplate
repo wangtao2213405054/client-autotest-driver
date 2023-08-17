@@ -1,6 +1,8 @@
 # _author: Coke
 # _date: 2022/7/26 11:33
 
+from mitmproxy import http
+
 import json
 import os
 
@@ -8,15 +10,16 @@ import os
 class ResponseFile:
 
     @staticmethod
-    def charles_file(file_name):
+    def text(sign, file_name):
         """
         返回对应文件的信息
+        :param sign: 标记文件夹的位置
         :param file_name: 文件名称
         :return:
         """
         file_name = f'{file_name}.json'
         obj_path = os.path.dirname(__file__)
-        json_path = os.path.join(obj_path, '$device', file_name)
+        json_path = os.path.join(obj_path, sign, file_name)
         with open(json_path, 'r') as file:
             res_file = json.loads(file.read())
         return res_file
@@ -24,11 +27,39 @@ class ResponseFile:
 
 class $class_name(ResponseFile):
     url = '$url'
+    requestProxy = True
+    responseProxy = True
 
-    def response(self, flow):
+    def request(self, flow: http.HTTPFlow):
+        """
+        拦截接口请求并模拟数据
+        :param flow: 单个HTTP的对象集合事务
+        :return:
+        """
+
+        # 如果此接口请求不需要模拟则返回
+        if not self.requestProxy:
+            return
+
         # 拦截指定的url
         if self.url in flow.request.url:
-            res = self.charles_file('$class_name')
+            res = self.text('request', '$class_name')
+            flow.request.set_text(json.dumps(res))
+
+    def response(self, flow: http.HTTPFlow):
+        """
+        拦截接口响应并模拟数据
+        :param flow: 单个HTTP的对象集合事务
+        :return:
+        """
+
+        # 如果此接口响应不需要模拟则返回
+        if not self.responseProxy:
+            return
+
+        # 拦截指定的url
+        if self.url in flow.request.url:
+            res = self.text('response', '$class_name')
             # 设置返回数据
             flow.response.set_text(json.dumps(res))
 

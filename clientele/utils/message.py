@@ -119,7 +119,7 @@ class DingTalk:
     @property
     def request(self):
         try:
-            response = requests.request('POST', self.url, json=self.body)
+            response = requests.request('POST', self.url, json=self.body, verify=False)
             if response.status_code != 200:
                 logging.error(f'发送机器人信息失败, 服务状态码 "{response.status_code}"')
                 return
@@ -232,7 +232,7 @@ class Lark:
     @property
     def request(self) -> Union[dict, None]:
         try:
-            response = requests.request('POST', self.url, json=self.body)
+            response = requests.request('POST', self.url, json=self.body, verify=False)
 
             if response.status_code != 200:
                 logging.info(f'发送飞书通知错误, 状态码: {response.status_code}')

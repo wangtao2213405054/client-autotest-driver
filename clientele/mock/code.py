@@ -3,7 +3,7 @@
 
 # 生成 mock.py 相关的代码
 
-from clientele import utils, mock, globals
+from clientele import utils, mock
 
 import logging
 import string
@@ -22,9 +22,9 @@ class CreateMockCode:
         with open(_conf, 'r', encoding='utf-8') as file:
             _code = file.readlines()
 
-        self._head = ''.join(_code[0: 23])
-        self._methods = ''.join(_code[23: 34])
-        self._logger = ''.join(_code[34:39])
+        self._head = ''.join(_code[0: 26])
+        self._methods = ''.join(_code[26: 65])
+        self._logger = ''.join(_code[65: 70])
 
         self.url_list = url_list
 
@@ -35,9 +35,6 @@ class CreateMockCode:
         :return:
         """
 
-        head_str = string.Template(self._head)
-        _head = head_str.substitute(device=globals.get('device'))
-
         _methods = ''
         _logger = ''
         for index, item in enumerate(self.url_list):
@@ -45,7 +42,7 @@ class CreateMockCode:
             _method = string.Template(self._methods)
             _class_name = mock.url_to_class(item)
 
-            _code = _method.substitute(class_name=_class_name, url=item)
+            _code = _method.substitute(class_name=_class_name, url=item, proxy=True)
             _methods += _code
 
             _logger_class = f'    {_class_name}()'
@@ -56,7 +53,7 @@ class CreateMockCode:
         _str = string.Template(self._logger)
         _logger = _str.substitute(add=_logger)
 
-        _code = _head + _methods + _logger
+        _code = self._head + _methods + _logger
 
         logging.debug(f'本次创建 {len(self.url_list)} 个 mitmproxy 拦截器')
         return _code

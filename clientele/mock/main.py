@@ -50,9 +50,7 @@ class MockHandler:
         mock data
         """
         _domain = [
-            'mitmproxy.org',
-            'python.org',
-            'github.org'
+            'gclcoke.online'
         ]
         return _domain
 
@@ -64,12 +62,12 @@ class MockHandler:
         """
         _api = [
             '/api/v1/platform/user/login',
-            '/api/v1/platform/project/list'
+            '/api/v1/client/devices/worker/list'
         ]
         return _api
 
 
 if __name__ == '__main__':
-    MockHandler(8888)
+    MockHandler(8080)
     import time
     time.sleep(1000)
