@@ -1,6 +1,7 @@
 # _author: Coke
 # _date: 2022/7/26 11:33
 
+from typing import Union, Tuple, Dict
 from mitmproxy import http
 
 import json
@@ -9,26 +10,41 @@ import os
 
 class ResponseFile:
 
-    @staticmethod
-    def text(sign, file_name):
+    def __init__(self):
+        self.mock_path = os.path.dirname(__file__)
+
+    def text(self, sign: str, filename: str) -> Union[Tuple, Dict]:
         """
         返回对应文件的信息
         :param sign: 标记文件夹的位置
-        :param file_name: 文件名称
+        :param filename: 文件名称
         :return:
         """
-        file_name = f'{file_name}.json'
-        obj_path = os.path.dirname(__file__)
-        json_path = os.path.join(obj_path, sign, file_name)
-        with open(json_path, 'r') as file:
-            res_file = json.loads(file.read())
-        return res_file
+        json_path = os.path.join(self.mock_path, 'breakpoint', sign, f'{filename}.json')
+        with open(json_path, 'r', encoding='utf-8') as file:
+            response = json.loads(file.read())
+
+        return response
+
+    def record(self, data: Union[Tuple, Dict], sign: str, filename: str) -> None:
+        """
+        将对应的数据记录
+        :param data: 要写入的内容
+        :param sign: 标记文件夹的位置
+        :param filename: 文件名称
+        :return:
+        """
+        json_path = os.path.join(self.mock_path, 'record', sign, f'{filename}.json')
+        with open(json_path, 'w', encoding='utf-8') as file:
+            file.write(json.dumps(data, indent=2, ensure_ascii=False))
 
 
-class $class_name(ResponseFile):
+class $className(ResponseFile):
     url = '$url'
-    requestProxy = True
-    responseProxy = True
+    recordRequest = $recordRequest
+    recordResponse = $recordResponse
+    breakpointRequest = $breakpointRequest
+    breakpointResponse = $breakpointResponse
 
     def request(self, flow: http.HTTPFlow):
         """
@@ -37,13 +53,13 @@ class $class_name(ResponseFile):
         :return:
         """
 
-        # 如果此接口请求不需要模拟则返回
-        if not self.requestProxy:
-            return
+        # 记录请求信息
+        if self.recordRequest:
+            self.record(flow.request.json(), 'request', '$className')
 
-        # 拦截指定的url
-        if self.url in flow.request.url:
-            res = self.text('request', '$class_name')
+        # 拦截响应并修改其内容
+        if self.breakpointRequest and self.url in flow.request.url:
+            res = self.text('request', '$className')
             flow.request.set_text(json.dumps(res))
 
     def response(self, flow: http.HTTPFlow):
@@ -53,13 +69,13 @@ class $class_name(ResponseFile):
         :return:
         """
 
-        # 如果此接口响应不需要模拟则返回
-        if not self.responseProxy:
-            return
+        # 记录响应信息
+        if self.recordResponse:
+            self.record(flow.response.json(), 'response', '$className')
 
-        # 拦截指定的url
-        if self.url in flow.request.url:
-            res = self.text('response', '$class_name')
+        # 拦截响应并修改其内容
+        if self.breakpointResponse and self.url in flow.request.url:
+            res = self.text('response', '$className')
             # 设置返回数据
             flow.response.set_text(json.dumps(res))
 

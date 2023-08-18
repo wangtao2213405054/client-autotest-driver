@@ -1,9 +1,7 @@
 # _author: Coke
 # _date: 2022/7/26 18:28
 
-# 对 mock 相关 数据 进行初始化
-
-from clientele import utils, mock
+from clientele import utils, mock, api, globals
 
 import logging
 
@@ -14,16 +12,18 @@ class MockHandler:
     依赖于 mitmproxy
     """
 
-    def __init__(self, port):
+    def __init__(self, port: int, project_id: int):
         """
         初始化 Mock 相关信息及配置
         :param port: 要启动的端口号
+        :param project_id: 项目 ID
         """
         self._port = port
-        self._domain = self.get_domain
-        self._api = self.get_api
-        self._code_file = mock.CreateMockCode(self._api).create_file()
-        self.start_server()
+        self._domain = list(map(lambda x: x.get('domain'), api.get_mock_domain_list(project_id)))
+        self._api = api.get_mock_api_list(project_id)
+        _mock = mock.CreateMockCode(self._api)
+        self._code_file = _mock.create_file()
+        _mock.create_api_info()
 
     def start_server(self):
         """
@@ -43,31 +43,10 @@ class MockHandler:
         )
         process.start()
 
-    @property
-    def get_domain(self):
-        """
-        获取当前项目下的域名列表
-        mock data
-        """
-        _domain = [
-            'gclcoke.online'
-        ]
-        return _domain
-
-    @property
-    def get_api(self):
-        """
-        获取当前项目下的所有接口
-        mock data
-        """
-        _api = [
-            '/api/v1/platform/user/login',
-            '/api/v1/client/devices/worker/list'
-        ]
-        return _api
-
 
 if __name__ == '__main__':
-    MockHandler(8080)
+    globals.add('token', '')
+    obj = MockHandler(8080, 2)
+    obj.start_server()
     import time
     time.sleep(1000)

@@ -8,6 +8,7 @@ from .devices import *
 from .case import *
 from .upload import *
 from .project import *
+from .mock import *
 
 
 __all__ = [

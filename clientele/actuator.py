@@ -8,7 +8,6 @@ import random
 
 
 def workers(name, worker_id, task_id, token, kwargs):
-    print(kwargs)
     globals.add('token', token)
 
     run_count = len(kwargs.get('cases'))
@@ -30,5 +29,8 @@ def workers(name, worker_id, task_id, token, kwargs):
     else:
         api.update_worker_status(dict(id=worker_id, status=0))
 
-    api.request('POST', '/task/center/status', json={'id': task_id, 'status': random.randint(2, 3), 'device': worker_id})
-
+    api.request(
+        'POST',
+        '/task/center/status',
+        json={'id': task_id, 'status': random.randint(2, 3), 'device': worker_id}
+    )
