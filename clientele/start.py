@@ -9,8 +9,8 @@ import socketio.exceptions
 import logging
 import time
 
-tokens = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Iua1i-ivleWViiIsInVzZXJfaWQiOiIwYTViYWZmNDNhNGQxMWVlYTR' \
-         'iZjUwODQ5MjQxYTBlMCIsImV4cCI6bnVsbH0.cZkMp0rX6E4cyW3EEec7xxthu_XzfbbHHYcSZrKnJ-U'
+tokens = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1hYyIsInVzZXJfaWQiOiJmNGZhYzIxNDNkY2ExMWVlODU3Y' \
+         'mFjZGU0ODAwMTEyMiIsImV4cCI6bnVsbH0.m4y_5w1_MRye33A3fNv55S-7Vr4HocxQ45Mp4MSLans'
 
 environment = 'local'
 globals.add('environment', environment)
@@ -133,7 +133,7 @@ class Starter:
                 continue
 
             globals.add('freeTask', _task.get('free'))
-            _task_list = _task.get('task')
+            _task_list = _task.get('task') or []
 
             # 共享变量
             _memory = multiprocessing.Manager().dict()

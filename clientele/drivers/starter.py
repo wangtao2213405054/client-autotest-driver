@@ -16,9 +16,9 @@ class DriverStarter:
 
         from selenium import webdriver
         _browser: str = self.device.get('browser')
-        _mock = self.device.get('mockReset')
+        _mock = self.device.get('mockProxy')
         _port = self.device.get('httpProxyPort')
-        _head_reset = self.device.get('headReset')
+        _head_reset = self.device.get('headless')
         _url = self.device.get('url')
 
         if _browser.lower() == 'Chrome'.lower():
